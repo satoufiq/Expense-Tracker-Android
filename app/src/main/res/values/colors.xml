@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    
+    <!-- Dark Theme Palette -->
+    <color name="background">#0F0F0F</color>
+    <color name="surface">#1A1A1A</color>
+    <color name="surface_variant">#252525</color>
+    
+    <color name="primary">#D0BCFF</color>
+    <color name="onPrimary">#381E72</color>
+    <color name="primary_container">#4F378B</color>
+    <color name="onPrimary_container">#EADDFF</color>
+    
+    <color name="secondary">#CCC2DC</color>
+    <color name="onSecondary">#332D41</color>
+    <color name="secondary_container">#4A4458</color>
+    <color name="onSecondary_container">#E8DEF8</color>
+    
+    <color name="tertiary">#EFB8C8</color>
+    <color name="onTertiary">#492532</color>
+    
+    <color name="error">#F2B8B5</color>
+    <color name="onError">#601410</color>
+    
+    <color name="outline">#938F99</color>
+    <color name="onBackground">#E6E1E5</color>
+    <color name="onSurface">#E6E1E5</color>
+    <color name="onSurface_variant">#CAC4D0</color>
+
+    <color name="grey_900">#212121</color>
+    <color name="grey_800">#424242</color>
+    <color name="grey_700">#616161</color>
+</resources>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.expensetracker2207050.ui.auth.SplashFragment"
+        android:label="Splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splash_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splash_to_dashboard"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.expensetracker2207050.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_login_to_dashboard"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.expensetracker2207050.ui.auth.RegisterFragment"
+        android:label="Register"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_register_to_dashboard"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.expensetracker2207050.ui.dashboard.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboard_to_modeSelection"
+            app:destination="@id/modeSelectionFragment" />
+        <action
+            android:id="@+id/action_dashboard_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/dashboardFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dashboard_to_alerts"
+            app:destination="@id/alertsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/modeSelectionFragment"
+        android:name="com.example.expensetracker2207050.ui.dashboard.ModeSelectionFragment"
+        android:label="Select Mode"
+        tools:layout="@layout/fragment_mode_selection">
+        <action
+            android:id="@+id/action_modeSelection_to_personal"
+            app:destination="@id/personalFragment" />
+        <action
+            android:id="@+id/action_modeSelection_to_group"
+            app:destination="@id/groupFragment" />
+        <action
+            android:id="@+id/action_modeSelection_to_parent"
+            app:destination="@id/parentFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/personalFragment"
+        android:name="com.example.expensetracker2207050.ui.personal.PersonalFragment"
+        android:label="Personal Mode"
+        tools:layout="@layout/fragment_personal">
+        <action
+            android:id="@+id/action_personal_to_analytics"
+            app:destination="@id/analyticsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/groupFragment"
+        android:name="com.example.expensetracker2207050.ui.group.GroupFragment"
+        android:label="Group Mode"
+        tools:layout="@layout/fragment_group">
+        <action
+            android:id="@+id/action_group_to_analytics"
+            app:destination="@id/analyticsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/parentFragment"
+        android:name="com.example.expensetracker2207050.ui.parent.ParentFragment"
+        android:label="Parent Mode"
+        tools:layout="@layout/fragment_parent">
+        <action
+            android:id="@+id/action_parent_to_childExpenses"
+            app:destination="@id/childExpensesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/childExpensesFragment"
+        android:name="com.example.expensetracker2207050.ui.parent.ChildExpensesFragment"
+        android:label="Child Expenses"
+        tools:layout="@layout/fragment_child_expenses">
+        <argument
+            android:name="childUid"
+            app:argType="string" />
+        <argument
+            android:name="childName"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/alertsFragment"
+        android:name="com.example.expensetracker2207050.ui.alerts.AlertsFragment"
+        android:label="Alerts"
+        tools:layout="@layout/fragment_alerts" />
+
+    <fragment
+        android:id="@+id/analyticsFragment"
+        android:name="com.example.expensetracker2207050.ui.analytics.AnalyticsFragment"
+        android:label="Analytics"
+        tools:layout="@layout/fragment_analytics">
+        <argument
+            android:name="groupId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+</navigation>
