@@ -4,61 +4,100 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="8dp"
-    app:cardBackgroundColor="@color/glass_surface"
+    android:layout_marginHorizontal="4dp"
+    app:cardBackgroundColor="@color/bg_dark"
     app:cardCornerRadius="24dp"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/rim_light_start"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/card_highlight"
     app:strokeWidth="1dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tvInviteType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="GROUP INVITATION"
-            android:textColor="@color/primary"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvInviteMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="You have been invited to join a group."
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+        <!-- Glow Effect -->
+        <View
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="end|top"
+            android:alpha="0.15"
+            android:background="@drawable/bg_fab_glow" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="end"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="22dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnReject"
-                style="@style/Widget.Material3.Button.TextButton"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reject"
-                android:textColor="@color/error" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAccept"
-                style="@style/Widget.Material3.Button.TonalButton"
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@color/card_highlight"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_group"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:tint="@color/primary" />
+
+                <TextView
+                    android:id="@+id/tvInviteType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="GROUP INVITATION"
+                    android:textColor="@color/primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvInviteMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:stateListAnimator="@animator/button_squish"
-                android:text="Accept"
-                app:cornerRadius="12dp" />
+                android:layout_marginTop="12dp"
+                android:text="You have been invited to join a group."
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnReject"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reject"
+                    android:textColor="@color/error"
+                    android:textSize="14sp"
+                    app:icon="@drawable/ic_dashboard_logout"
+                    app:iconSize="18dp"
+                    app:iconTint="@color/error" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAccept"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:stateListAnimator="@animator/button_squish"
+                    android:text="Accept"
+                    android:textSize="14sp"
+                    app:cornerRadius="16dp"
+                    app:icon="@drawable/ic_add"
+                    app:iconSize="18dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 </com.google.android.material.card.MaterialCardView>

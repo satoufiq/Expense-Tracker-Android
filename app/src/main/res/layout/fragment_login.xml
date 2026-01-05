@@ -5,11 +5,36 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
+    <!-- Background Glow Effect -->
+    <View
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:alpha="0.4"
+        android:background="@drawable/bg_fab_glow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Welcome Icon -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivWelcomeIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="80dp"
+        android:background="@color/glow_purple"
+        android:padding="18dp"
+        android:src="@drawable/ic_user"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+        app:tint="@color/primary" />
+
     <TextView
         android:id="@+id/tvLoginTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-medium"
         android:letterSpacing="-0.02"
         android:text="Welcome\nBack"
@@ -17,8 +42,20 @@
         android:textSize="48sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="32dp"/>
+        app:layout_constraintTop_toBottomOf="@id/ivWelcomeIcon" />
+
+    <!-- Subtitle with Taka -->
+    <TextView
+        android:id="@+id/tvLoginSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Track your ৳ expenses smartly"
+        android:textColor="@color/text_secondary"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginTitle" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardLogin"
@@ -27,77 +64,104 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="48dp"
-        app:layout_constraintTop_toBottomOf="@id/tvLoginTitle">
+        app:cardElevation="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvLoginSubtitle">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="28dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email or Username"
+                app:boxStrokeColor="@color/primary"
+                app:hintTextColor="@color/text_secondary"
                 app:startIconDrawable="@drawable/ic_user"
-                app:startIconTint="@color/primary"
-                app:hintTextColor="@color/text_secondary">
+                app:startIconTint="@color/primary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:hint="Password"
-                app:startIconDrawable="@drawable/ic_pass"
-                app:startIconTint="@color/primary"
+                app:boxStrokeColor="@color/primary"
                 app:endIconMode="password_toggle"
                 app:endIconTint="@color/text_secondary"
-                app:hintTextColor="@color/text_secondary">
+                app:hintTextColor="@color/text_secondary"
+                app:startIconDrawable="@drawable/ic_pass"
+                app:startIconTint="@color/primary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogin"
-        style="@style/Widget.Material3.Button"
+    <!-- Login Button with Glow -->
+    <FrameLayout
+        android:id="@+id/frameLoginButton"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
-        android:stateListAnimator="@animator/button_squish"
-        android:text="Login to Account"
-        android:textSize="18sp"
-        android:textAllCaps="false"
-        app:cornerRadius="20dp"
-        app:layout_constraintTop_toBottomOf="@id/cardLogin" />
+        app:layout_constraintTop_toBottomOf="@id/cardLogin">
+
+        <!-- Button Glow -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:alpha="0.4"
+            android:background="@drawable/bg_fab_glow" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogin"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:stateListAnimator="@animator/button_squish"
+            android:text="Login to Account"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_user"
+            app:iconGravity="start"
+            app:iconSize="24dp" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
+        android:drawablePadding="8dp"
         android:text="Don't have an account? Sign Up"
         android:textColor="@color/text_secondary"
         android:textSize="16sp"
+        app:drawableStartCompat="@drawable/ic_add"
+        app:drawableTint="@color/primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnLogin" />
+        app:layout_constraintTop_toBottomOf="@id/frameLoginButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

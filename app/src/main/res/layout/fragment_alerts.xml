@@ -3,43 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_dark"
     android:paddingHorizontal="24dp">
+
+    <!-- Header Icon -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivAlertsIcon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="60dp"
+        android:background="@color/glow_red"
+        android:padding="14dp"
+        android:src="@drawable/ic_dashboard_alerts"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+        app:tint="@color/error" />
 
     <TextView
         android:id="@+id/tvAlertsTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="16dp"
         android:fontFamily="sans-serif-medium"
         android:letterSpacing="-0.02"
         android:text="Alerts &amp;\nInvitations"
         android:textColor="@color/white"
-        android:textSize="40sp"
+        android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/ivAlertsIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivAlertsIcon"
+        app:layout_constraintTop_toTopOf="@id/ivAlertsIcon" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAlerts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:clipToPadding="false"
         android:paddingBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvAlertsTitle" />
+        app:layout_constraintTop_toBottomOf="@id/ivAlertsIcon" />
 
-    <TextView
+    <LinearLayout
         android:id="@+id/tvNoAlerts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your inbox is empty"
-        android:textColor="@color/text_secondary"
-        android:textSize="16sp"
+        android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvAlertsTitle" />
+        app:layout_constraintTop_toBottomOf="@id/ivAlertsIcon">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:alpha="0.3"
+            android:src="@drawable/ic_dashboard_alerts"
+            app:tint="@color/text_secondary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="📭 Your inbox is empty"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,35 +15,67 @@
             android:layout_height="wrap_content"
             android:padding="24dp">
 
-            <TextView
-                android:id="@+id/tvHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Child's Expenses"
-                android:textColor="@color/white"
-                android:textSize="28sp"
-                android:textStyle="bold"
+            <!-- Header Icon -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivChildIcon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@color/glow_purple"
+                android:padding="12dp"
+                android:src="@drawable/ic_person"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:tint="@color/primary" />
 
             <TextView
-                android:id="@+id/tvChildName"
+                android:id="@+id/tvHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Child's Expenses"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/ivChildIcon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivChildIcon"
+                app:layout_constraintTop_toTopOf="@id/ivChildIcon" />
+
+            <LinearLayout
+                android:id="@+id/llChildInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Viewing: Name"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvHeader" />
+                app:layout_constraintTop_toBottomOf="@id/ivChildIcon">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_user"
+                    app:tint="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/tvChildName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Viewing: Name"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSummary"
                 style="@style/Widget.ExpenseTracker.PremiumCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                app:layout_constraintTop_toBottomOf="@id/tvChildName">
+                android:layout_marginTop="28dp"
+                app:cardElevation="8dp"
+                app:layout_constraintTop_toBottomOf="@id/llChildInfo">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -64,8 +96,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="$0.00"
-                        android:textColor="@color/expense_red" />
+                        android:text="৳0.00"
+                        android:textColor="@color/expense_red"
+                        android:textSize="32sp" />
 
                     <TextView
                         android:id="@+id/tvTopCategory"

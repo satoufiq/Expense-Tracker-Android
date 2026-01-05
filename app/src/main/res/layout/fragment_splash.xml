@@ -5,28 +5,96 @@
     android:layout_height="match_parent"
     android:background="@color/deep_space_bg">
 
+    <!-- Background Glow Effect Top -->
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:alpha="0.6"
+        android:background="@drawable/bg_fab_glow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Background Glow Effect Bottom -->
+    <View
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:alpha="0.4"
+        android:background="@drawable/bg_fab_glow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- App Icon with Glow -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardAppIcon"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginBottom="32dp"
+        app:cardBackgroundColor="@color/card_highlight"
+        app:cardCornerRadius="36dp"
+        app:cardElevation="24dp"
+        app:layout_constraintBottom_toTopOf="@id/tvAppTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Glow Effect Behind Icon -->
+            <View
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_fab_glow" />
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_wallet"
+                app:tint="@color/primary" />
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- App Title -->
     <TextView
+        android:id="@+id/tvAppTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:letterSpacing="-0.02"
-        android:text="EXPENSE\nTRACKER"
+        android:letterSpacing="0.05"
+        android:text="EXPENSE TRACKER"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="40sp"
+        android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="64dp"
-        android:indeterminateTint="@color/primary"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- Subtitle with Taka Symbol -->
+    <LinearLayout
+        android:id="@+id/llSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvAppTitle">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.1"
+            android:text="৳ Track Smart, Save Better"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+    <!-- Version Info -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

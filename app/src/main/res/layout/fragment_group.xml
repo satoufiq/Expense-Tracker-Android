@@ -129,21 +129,33 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvHeader">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:alpha="0.2"
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:alpha="0.15"
+                    android:background="@color/glow_green"
+                    android:padding="30dp"
                     android:src="@drawable/ic_group"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                     app:tint="@color/text_secondary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Join or Create a Group"
+                    android:text="🤝 Join or Create a Group"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="💸 Share expenses with family &amp; friends"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCreateGroup"
@@ -153,8 +165,10 @@
                     android:layout_marginTop="32dp"
                     android:stateListAnimator="@animator/button_squish"
                     android:text="Get Started"
+                    android:textSize="16sp"
                     app:cornerRadius="16dp"
-                    app:icon="@drawable/ic_add" />
+                    app:icon="@drawable/ic_add"
+                    app:iconSize="20dp" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

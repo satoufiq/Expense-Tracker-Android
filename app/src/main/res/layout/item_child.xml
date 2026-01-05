@@ -4,57 +4,82 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="8dp"
-    app:cardBackgroundColor="@color/glass_surface"
+    android:layout_marginHorizontal="4dp"
+    app:cardBackgroundColor="@color/card_dark"
     app:cardCornerRadius="24dp"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/rim_light_start"
+    app:cardElevation="4dp"
+    app:strokeColor="@color/glow_purple"
     app:strokeWidth="1dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="20dp">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_person"
-            app:tint="@color/primary" />
+        <!-- Glow Effect -->
+        <View
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="end|center_vertical"
+            android:alpha="0.25"
+            android:background="@drawable/bg_fab_glow" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="20dp">
 
-            <TextView
-                android:id="@+id/tvChildName"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/glow_purple"
+                android:elevation="4dp"
+                android:padding="14dp"
+                android:src="@drawable/ic_person"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                app:tint="@color/primary" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvChildName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Child Name"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvChildEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:drawablePadding="6dp"
+                    android:text="child@email.com"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    app:drawableStartCompat="@drawable/ic_email"
+                    app:drawableTint="@color/text_secondary" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewExpenses"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Child Name"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvChildEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="child@email.com"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                android:stateListAnimator="@animator/button_squish"
+                android:text="View"
+                android:textSize="14sp"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_wallet"
+                app:iconSize="18dp" />
         </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnViewExpenses"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:stateListAnimator="@animator/button_squish"
-            android:text="View"
-            app:cornerRadius="12dp" />
-    </LinearLayout>
+    </FrameLayout>
 </com.google.android.material.card.MaterialCardView>

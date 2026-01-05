@@ -3,21 +3,32 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- Premium Dark Theme Palette (from image) -->
-    <color name="bg_dark">#12141D</color>
-    <color name="card_dark">#1E212D</color>
-    <color name="card_highlight">#282C3B</color>
-    
-    <color name="primary">#7C83FD</color>
+    <!-- Royal Dark Purple Theme -->
+    <color name="bg_dark">#060510</color>
+    <color name="deep_space_bg">#020104</color>
+    <color name="card_dark">#0D0B15</color>
+    <color name="card_highlight">#13101D</color>
+    <color name="glass_surface">#1A0D0B15</color>
+
+    <color name="primary">#3A1D66</color>
+    <color name="primary_glow">#4D3A1D66</color>
     <color name="onPrimary">#FFFFFF</color>
-    
-    <color name="income_green">#48D38A</color>
-    <color name="expense_red">#FF6B6B</color>
-    
+    <color name="secondary">#4B2D7A</color>
+
+    <color name="income_green">#10B981</color>
+    <color name="income_glow">#2D10B981</color>
+    <color name="expense_red">#EF4444</color>
+    <color name="expense_glow">#2DEF4444</color>
+
     <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#8E92A3</color>
-    
+    <color name="text_secondary">#9CA3AF</color>
+
+    <color name="error">#EF4444</color>
+    <color name="rim_light_start">#4DFFFFFF</color>
+
     <!-- Transparent helpers -->
     <color name="glass_white">#0DFFFFFF</color>
-    <color name="glow_purple">#337C83FD</color>
+    <color name="glow_purple">#333A1D66</color>
+    <color name="glow_green">#3310B981</color>
+    <color name="glow_red">#33EF4444</color>
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Glow Layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <gradient
+                android:type="radial"
+                android:gradientRadius="200dp"
+                android:startColor="#337C3AED"
+                android:endColor="@android:color/transparent" />
+        </shape>
+    </item>
+    <!-- Main Card Layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <solid android:color="@color/card_dark" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/glass_white" />
+        </shape>
+    </item>
+</layer-list>
+

@@ -1,24 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_dark"
     android:padding="24dp">
 
+    <!-- Header Icon -->
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivParentIcon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/glow_green"
+        android:padding="14dp"
+        android:src="@drawable/ic_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+        app:tint="@color/income_green" />
+
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_width="224dp"
+        android:layout_height="149dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif-medium"
         android:letterSpacing="-0.02"
         android:text="Parent\nSupervision"
         android:textColor="@color/white"
-        android:textSize="40sp"
+        android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/ivParentIcon"
+        app:layout_constraintEnd_toStartOf="@id/btnInviteChild"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toEndOf="@id/ivParentIcon"
+        app:layout_constraintTop_toTopOf="@id/ivParentIcon"
+        app:layout_constraintVertical_bias="0.355" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnInviteChild"
@@ -26,35 +48,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:stateListAnimator="@animator/button_squish"
-        android:text="Invite Child"
+        android:text="Invite"
         android:textAllCaps="false"
+        android:textSize="14sp"
         app:cornerRadius="16dp"
         app:icon="@drawable/ic_add"
-        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        app:iconSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivParentIcon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvTitle" />
+        app:layout_constraintTop_toTopOf="@id/ivParentIcon" />
 
-    <TextView
-        android:id="@+id/tvSubtitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/llSubtitleHeader"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Linked Children"
-        android:textColor="@color/text_secondary"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@id/ivParentIcon">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_person"
+            app:tint="@color/primary" />
+
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="👶 Linked Children"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChildren"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:clipToPadding="false"
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
+        app:layout_constraintTop_toBottomOf="@id/llSubtitleHeader" />
 
     <LinearLayout
         android:id="@+id/llEmptyParent"
@@ -64,13 +103,16 @@
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
+        app:layout_constraintTop_toBottomOf="@id/llSubtitleHeader">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:alpha="0.2"
-            android:src="@drawable/ic_user"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:alpha="0.15"
+            android:background="@color/glow_green"
+            android:padding="30dp"
+            android:src="@drawable/ic_person"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
             app:tint="@color/text_secondary" />
 
         <TextView
@@ -79,7 +121,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="No children linked yet"
-            android:textColor="@color/text_secondary" />
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Tap 'Invite' to add a child account"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

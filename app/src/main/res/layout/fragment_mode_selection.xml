@@ -90,7 +90,7 @@
             app:iconGravity="textStart"
             app:iconPadding="24dp"
             app:iconSize="40dp"
-            app:iconTint="@color/secondary"
+            app:iconTint="@color/income_green"
             app:strokeColor="@color/rim_light_start"
             app:strokeWidth="1dp" />
 

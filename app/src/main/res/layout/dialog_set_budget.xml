@@ -3,26 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/card_dark"
+    android:background="@drawable/bg_glass_card"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="28dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Header with Icon -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:text="Set Monthly Budget"
-        android:textColor="@color/white"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/glow_green"
+            android:padding="12dp"
+            android:src="@drawable/ic_income"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+            app:tint="@color/income_green" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="Set Monthly Budget"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Budget Amount Input with Taka Symbol -->
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:hint="Budget Amount"
-        app:hintTextColor="@color/text_secondary">
+        app:boxStrokeColor="@color/income_green"
+        app:hintTextColor="@color/text_secondary"
+        app:prefixText="৳ "
+        app:prefixTextColor="@color/income_green"
+        app:startIconDrawable="@drawable/ic_wallet"
+        app:startIconTint="@color/income_green">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etBudgetAmount"
@@ -30,17 +55,42 @@
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:inputType="numberDecimal"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSaveBudget"
-        style="@style/Widget.Material3.Button"
+    <!-- Save Button with Glow Effect -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="24dp"
-        android:stateListAnimator="@animator/button_squish"
-        android:text="Save Budget"
-        app:cornerRadius="16dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp">
+
+        <!-- Button Glow Background -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:alpha="0.3"
+            android:background="@drawable/bg_fab_glow" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveBudget"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:backgroundTint="@color/income_green"
+            android:stateListAnimator="@animator/button_squish"
+            android:text="Save Budget"
+            android:textAllCaps="false"
+            android:textColor="@color/bg_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="20dp"
+            app:icon="@drawable/ic_income"
+            app:iconGravity="start"
+            app:iconSize="24dp"
+            app:iconTint="@color/bg_dark" />
+    </FrameLayout>
 
 </LinearLayout>
