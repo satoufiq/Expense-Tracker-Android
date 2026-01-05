@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/bg_dark">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background"
-        app:elevation="0dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="24dp">
 
             <TextView
-                android:id="@+id/tvTitle"
+                android:id="@+id/tvHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Child's Expenses"
-                android:textColor="@color/primary"
+                android:textColor="@color/white"
                 android:textSize="28sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvChildName"
@@ -32,59 +32,63 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Viewing: Name"
-                android:textColor="@color/onSurface_variant"
-                android:textSize="16sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvHeader" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSummary"
-                style="@style/Widget.ExpenseTracker.Card"
+                style="@style/Widget.ExpenseTracker.PremiumCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@id/tvChildName">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="24dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Monthly Summary"
-                        android:textColor="@color/onSurface_variant"
+                        android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tvTotalSpent"
+                        style="@style/TextAppearance.ExpenseTracker.Balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Total Spent: $0.00"
-                        android:textColor="@color/secondary"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:text="$0.00"
+                        android:textColor="@color/expense_red" />
 
                     <TextView
                         android:id="@+id/tvTopCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="12dp"
                         android:text="Top Category: N/A"
-                        android:textColor="@color/onSurface"
+                        android:textColor="@color/white"
                         android:textSize="14sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvChildExpenses"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="24dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvChildExpenses"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="24dp"
+                android:clipToPadding="false"
+                android:paddingBottom="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardSummary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

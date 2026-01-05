@@ -3,65 +3,80 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_glass_card"
     android:orientation="vertical"
     android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add New Expense"
-        android:textColor="@color/primary"
-        android:textSize="20sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="-0.01"
+        android:text="Add Transaction"
+        android:textColor="@color/white"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Amount">
+        android:layout_marginTop="24dp"
+        android:hint="Amount"
+        app:boxStrokeColor="@color/primary"
+        app:hintTextColor="@color/text_secondary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
+            android:fontFamily="monospace"
+            android:inputType="numberDecimal"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Category">
+        android:layout_marginTop="16dp"
+        android:hint="Category"
+        app:boxStrokeColor="@color/primary"
+        app:hintTextColor="@color/text_secondary">
 
         <AutoCompleteTextView
             android:id="@+id/actvCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none" />
+            android:inputType="none"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Description">
+        android:layout_marginTop="16dp"
+        android:hint="Description"
+        app:boxStrokeColor="@color/primary"
+        app:hintTextColor="@color/text_secondary">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
+        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:text="Save Expense"
-        app:cornerRadius="12dp" />
+        android:layout_height="64dp"
+        android:layout_marginTop="32dp"
+        android:stateListAnimator="@animator/button_squish"
+        android:text="Save"
+        app:cornerRadius="16dp" />
 
 </LinearLayout>

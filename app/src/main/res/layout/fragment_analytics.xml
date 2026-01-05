@@ -9,90 +9,94 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="40dp">
 
         <TextView
+            android:id="@+id/tvAnalyticsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Analytics"
-            android:textColor="@color/primary"
-            android:textSize="24sp"
+            android:layout_marginTop="60dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="-0.02"
+            android:text="Spending\nAnalytics"
+            android:textColor="@color/white"
+            android:textSize="40sp"
             android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggleTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:layout_gravity="center_horizontal"
             app:checkedButton="@+id/btnMonthly"
             app:singleSelection="true">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDaily"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="D" />
+                android:text="Daily" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWeekly"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="W" />
+                android:text="Weekly" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMonthly"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="M" />
+                android:text="Monthly" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnYearly"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Y" />
+                android:text="Yearly" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            android:layout_height="320dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/bg_glass_card"
+            android:orientation="vertical"
+            android:padding="16dp">
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp" />
-        </com.google.android.material.card.MaterialCardView>
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="320dp"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            android:background="@drawable/bg_glass_card"
+            android:orientation="vertical"
+            android:padding="16dp">
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp" />
-        </com.google.android.material.card.MaterialCardView>
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="320dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="32dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            android:background="@drawable/bg_glass_card"
+            android:orientation="vertical"
+            android:padding="16dp">
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/lineChart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp" />
-        </com.google.android.material.card.MaterialCardView>
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,59 +1,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. Force Dark Theme as per guidelines. -->
     <style name="Base.Theme.ExpenseTracker2207050" parent="Theme.Material3.Dark.NoActionBar">
-        <!-- Primary brand color. -->
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/onPrimary</item>
-        <item name="colorPrimaryContainer">@color/primary_container</item>
-        <item name="colorOnPrimaryContainer">@color/onPrimary_container</item>
         
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorOnSecondary">@color/onSecondary</item>
-        <item name="colorSecondaryContainer">@color/secondary_container</item>
-        <item name="colorOnSecondaryContainer">@color/onSecondary_container</item>
+        <item name="colorSurface">@color/card_dark</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/card_highlight</item>
         
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/background</item>
-        <item name="android:windowLightStatusBar">false</item>
-        
-        <!-- Background and Surface colors -->
-        <item name="android:windowBackground">@color/background</item>
-        <item name="colorSurface">@color/surface</item>
-        <item name="colorSurfaceVariant">@color/surface_variant</item>
-        <item name="colorOnSurface">@color/onSurface</item>
-        <item name="colorOnSurfaceVariant">@color/onSurface_variant</item>
-        <item name="colorOutline">@color/outline</item>
-        
-        <item name="colorError">@color/error</item>
-        <item name="colorOnError">@color/onError</item>
-
-        <!-- Rounded shapes -->
-        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.ExpenseTracker.SmallComponent</item>
-        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.ExpenseTracker.MediumComponent</item>
-        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.ExpenseTracker.LargeComponent</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="Theme.ExpenseTracker2207050" parent="Base.Theme.ExpenseTracker2207050" />
 
-    <style name="ShapeAppearance.ExpenseTracker.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">12dp</item>
-    </style>
-
-    <style name="ShapeAppearance.ExpenseTracker.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
+    <style name="Widget.ExpenseTracker.PremiumCard" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/card_dark</item>
+        <item name="cardElevation">0dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ExpenseTracker.LargeComponent</item>
     </style>
 
     <style name="ShapeAppearance.ExpenseTracker.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">24dp</item>
+        <item name="cornerSize">28dp</item>
     </style>
     
-    <style name="Widget.ExpenseTracker.Card" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">@color/surface_variant</item>
-        <item name="cardElevation">0dp</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.ExpenseTracker.MediumComponent</item>
+    <style name="TextAppearance.ExpenseTracker.Balance" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textColor">@color/income_green</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">monospace</item>
     </style>
 </resources>

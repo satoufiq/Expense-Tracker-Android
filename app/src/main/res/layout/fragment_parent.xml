@@ -3,16 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/bg_dark"
     android:padding="24dp">
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Parent Control"
-        android:textColor="@color/primary"
-        android:textSize="32sp"
+        android:layout_marginTop="60dp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="-0.02"
+        android:text="Parent\nSupervision"
+        android:textColor="@color/white"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +25,10 @@
         style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:stateListAnimator="@animator/button_squish"
         android:text="Invite Child"
+        android:textAllCaps="false"
+        app:cornerRadius="16dp"
         app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="@id/tvTitle"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,10 +38,10 @@
         android:id="@+id/tvSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:text="Linked Children"
-        android:textColor="@color/onSurface"
-        android:textSize="18sp"
+        android:textColor="@color/text_secondary"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -61,19 +67,19 @@
         app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:alpha="0.5"
-            android:src="@drawable/ic_person"
-            app:tint="@color/onSurface_variant" />
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:alpha="0.2"
+            android:src="@drawable/ic_user"
+            app:tint="@color/text_secondary" />
 
         <TextView
             android:id="@+id/tvNoChildren"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="No children linked"
-            android:textColor="@color/onSurface_variant" />
+            android:layout_marginTop="24dp"
+            android:text="No children linked yet"
+            android:textColor="@color/text_secondary" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

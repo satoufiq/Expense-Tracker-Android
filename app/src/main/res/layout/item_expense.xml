@@ -3,64 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginVertical="6dp"
+    app:cardBackgroundColor="@color/card_dark"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Food"
-            android:textColor="@color/primary"
-            android:textStyle="bold"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivCategoryIcon"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@color/card_highlight"
+            android:padding="10dp"
+            android:src="@drawable/ic_wallet"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+            app:tint="@color/text_secondary" />
 
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Description"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/tvAmount"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCategory" />
+            android:layout_marginStart="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Groceries"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/tvAmount"
+            app:layout_constraintStart_toEndOf="@id/ivCategoryIcon"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvContributor"
+            android:id="@+id/tvCategoryDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="By: User"
+            android:layout_marginTop="2dp"
+            android:text="Shopping • 24 Oct"
+            android:textColor="@color/text_secondary"
             android:textSize="12sp"
-            android:textColor="@color/secondary"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvDescription"
             app:layout_constraintTop_toBottomOf="@id/tvDescription" />
-
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="2023-10-25"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvContributor" />
 
         <TextView
             android:id="@+id/tvAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$0.00"
-            android:textColor="@color/secondary"
+            android:fontFamily="monospace"
+            android:fontFeatureSettings="tnum"
+            android:text="-৳0.00"
+            android:textColor="@color/expense_red"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

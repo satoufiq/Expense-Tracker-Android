@@ -3,85 +3,79 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@android:color/transparent">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background"
-        app:elevation="0dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="24dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tvHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Group Mode"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Group Mode"
-                    android:textColor="@color/primary"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/llActions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
-                    android:id="@+id/llActions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAnalytics"
+                    style="@style/Widget.Material3.Button.IconButton.Tonal"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_dashboard_mode"
+                    app:iconTint="@color/primary" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnAnalytics"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:padding="0dp"
-                        app:icon="@drawable/ic_dashboard_mode"
-                        app:iconGravity="textStart"
-                        app:iconPadding="0dp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnInvite"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:padding="0dp"
-                        app:icon="@drawable/ic_add"
-                        app:iconGravity="textStart"
-                        app:iconPadding="0dp" />
-                </LinearLayout>
-            </RelativeLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnInvite"
+                    style="@style/Widget.Material3.Button.IconButton.Tonal"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_person"
+                    app:iconTint="@color/secondary" />
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardGroupInfo"
-                style="@style/Widget.ExpenseTracker.Card"
+                style="@style/Widget.ExpenseTracker.PremiumCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:visibility="gone">
+                android:layout_marginTop="32dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/tvHeader">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="24dp">
 
                     <TextView
                         android:id="@+id/tvGroupName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Group Name"
-                        android:textColor="@color/onSurface"
-                        android:textSize="20sp"
+                        android:text="Family Group"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -89,168 +83,107 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Members: 0"
-                        android:textColor="@color/onSurface_variant"
+                        android:text="4 Members"
+                        android:textColor="@color/text_secondary"
                         android:textSize="14sp" />
 
                     <ProgressBar
                         android:id="@+id/pbGroupBudget"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:layout_marginTop="12dp"
-                        android:max="100" />
+                        android:layout_height="6dp"
+                        android:layout_marginTop="20dp"
+                        android:max="100"
+                        android:progressTint="@color/primary" />
 
                     <TextView
                         android:id="@+id/tvGroupBudgetText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="$0 / $5000"
-                        android:textColor="@color/secondary"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="monospace"
+                        android:text="৳0.00 / ৳5,000.00"
+                        android:textColor="@color/white"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilSearch"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvGroupExpenses"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                android:visibility="gone"
-                app:startIconDrawable="@drawable/ic_search"
-                app:startIconTint="@color/primary">
+                android:clipToPadding="false"
+                android:paddingBottom="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardGroupInfo" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Search group expenses..."
-                    android:inputType="text"
-                    android:textColor="@color/onSurface" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <HorizontalScrollView
-                android:id="@+id/hsvFilters"
+            <LinearLayout
+                android:id="@+id/llNoGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:scrollbars="none"
-                android:visibility="gone">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="40dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvHeader">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupFilters"
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:alpha="0.2"
+                    android:src="@drawable/ic_group"
+                    app:tint="@color/text_secondary" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleSelection="true">
+                    android:layout_marginTop="24dp"
+                    android:text="Join or Create a Group"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipAll"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="All" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCreateGroup"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:stateListAnimator="@animator/button_squish"
+                    android:text="Get Started"
+                    app:cornerRadius="16dp"
+                    app:icon="@drawable/ic_add" />
+            </LinearLayout>
 
-                    <com.google.android.material.chip.Chip
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Food" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-                    <com.google.android.material.chip.Chip
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Transport" />
-
-                    <com.google.android.material.chip.Chip
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Shopping" />
-
-                    <com.google.android.material.chip.Chip
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bills" />
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
-        </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvGroupExpenses"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="88dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <LinearLayout
-        android:id="@+id/llNoGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:alpha="0.5"
-            android:src="@drawable/ic_group"
-            app:tint="@color/onSurface_variant" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="No Group Found"
-            android:textColor="@color/onSurface"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="You are not part of any group yet.\nCreate one to start tracking with others."
-            android:textAlignment="center"
-            android:textColor="@color/onSurface_variant" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCreateGroup"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Create New Group" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvEmptyGroup"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="No group expenses found"
-        android:textColor="@color/onSurface_variant"
-        android:visibility="gone" />
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="24dp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddGroupExpense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
-        android:backgroundTint="@color/primary"
-        android:src="@drawable/ic_add"
-        android:visibility="gone"
-        app:tint="@color/onPrimary" />
+        <View
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_fab_glow" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddGroupExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/primary"
+            android:src="@drawable/ic_add"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:fabSize="normal"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+            app:tint="@color/white" />
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
