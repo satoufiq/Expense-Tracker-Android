@@ -62,18 +62,14 @@ public class DashboardFragment extends Fragment {
     private void loadUserInfo() {
         if (mAuth.getCurrentUser() == null) return;
 
-        binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("users").document(mAuth.getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    if (isAdded()) {
-                        binding.progressBar.setVisibility(View.GONE);
+                    if (isAdded() && binding != null) {
                         User user = documentSnapshot.toObject(User.class);
-                        if (user != null && binding.tvUsername != null && binding.tvAccountType != null) {
-                            binding.tvUsername.setText(user.getUsername());
-                            binding.tvAccountType.setText(user.getAccountType());
-                            binding.tvUsername.setVisibility(View.VISIBLE);
-                            binding.tvAccountType.setVisibility(View.VISIBLE);
+                        if (user != null) {
+                            String welcomeText = "Welcome back, " + user.getUsername();
+                            binding.tvWelcome.setText(welcomeText);
                         }
                     }
                 });

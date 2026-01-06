@@ -52,12 +52,15 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         }
 
         public void bind(Expense expense) {
-            binding.tvCategory.setText(expense.getCategory());
             binding.tvDescription.setText(expense.getDescription());
-            binding.tvAmount.setText(String.format(Locale.getDefault(), "$%.2f", expense.getAmount()));
+            binding.tvAmount.setText(String.format(Locale.getDefault(), "৳%.2f", expense.getAmount()));
+
+            // Combine category and date
+            String categoryDateText = expense.getCategory();
             if (expense.getDate() != null) {
-                binding.tvDate.setText(dateFormat.format(expense.getDate()));
+                categoryDateText += " • " + dateFormat.format(expense.getDate());
             }
+            binding.tvCategoryDate.setText(categoryDateText);
 
             String uid = expense.getContributorId() != null ? expense.getContributorId() : expense.getUserId();
 
@@ -75,12 +78,15 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         }
 
         private void fetchUserName(String uid) {
+            int position = getBindingAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) return;
+
             FirebaseFirestore.getInstance().collection("users").document(uid).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         String name = documentSnapshot.getString("username");
                         if (name != null) {
                             userNameCache.put(uid, name);
-                            notifyItemChanged(getAdapterPosition());
+                            notifyItemChanged(position);
                         }
                     });
         }

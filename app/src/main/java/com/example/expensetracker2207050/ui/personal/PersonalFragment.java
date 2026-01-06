@@ -2,8 +2,6 @@ package com.example.expensetracker2207050.ui.personal;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.expensetracker2207050.R;
 import com.example.expensetracker2207050.databinding.DialogAddExpenseBinding;
 import com.example.expensetracker2207050.databinding.DialogSetBudgetBinding;
 import com.example.expensetracker2207050.databinding.FragmentPersonalBinding;
@@ -24,7 +20,6 @@ import com.example.expensetracker2207050.models.Budget;
 import com.example.expensetracker2207050.models.Expense;
 import com.example.expensetracker2207050.models.User;
 import com.example.expensetracker2207050.viewmodel.PersonalViewModel;
-import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
@@ -42,8 +37,6 @@ public class PersonalFragment extends Fragment {
     private boolean alertSentThisSession = false;
 
     private List<Expense> originalExpenses = new ArrayList<>();
-    private String currentSearchQuery = "";
-    private String currentCategoryFilter = "All";
 
     @Nullable
     @Override
@@ -58,13 +51,16 @@ public class PersonalFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(PersonalViewModel.class);
 
         setupRecyclerView();
-        setupFilters();
         loadBudget();
         observeViewModel();
 
         binding.fabAddExpense.setOnClickListener(v -> showAddExpenseDialog());
-        binding.btnAnalytics.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_personal_to_analytics));
-        binding.cardBudget.setOnClickListener(v -> showSetBudgetDialog());
+
+        // Long press on cardNetBalance to set budget
+        binding.cardNetBalance.setOnLongClickListener(v -> {
+            showSetBudgetDialog();
+            return true;
+        });
     }
 
     private void setupRecyclerView() {
@@ -73,47 +69,6 @@ public class PersonalFragment extends Fragment {
         binding.rvExpenses.setAdapter(adapter);
     }
 
-    private void setupFilters() {
-        binding.etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                currentSearchQuery = s.toString().toLowerCase().trim();
-                applyFilters();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        binding.chipGroupFilters.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (!checkedIds.isEmpty()) {
-                Chip chip = group.findViewById(checkedIds.get(0));
-                currentCategoryFilter = chip.getText().toString();
-                applyFilters();
-            }
-        });
-    }
-
-    private void applyFilters() {
-        List<Expense> filteredList = new ArrayList<>();
-        for (Expense expense : originalExpenses) {
-            String desc = expense.getDescription() != null ? expense.getDescription().toLowerCase() : "";
-            String cat = expense.getCategory() != null ? expense.getCategory().toLowerCase() : "";
-
-            boolean matchesSearch = desc.contains(currentSearchQuery) || cat.contains(currentSearchQuery);
-            boolean matchesCategory = currentCategoryFilter.equals("All") ||
-                    (expense.getCategory() != null && expense.getCategory().equalsIgnoreCase(currentCategoryFilter));
-
-            if (matchesSearch && matchesCategory) {
-                filteredList.add(expense);
-            }
-        }
-        adapter.setExpenses(filteredList);
-        binding.tvEmpty.setVisibility(filteredList.isEmpty() ? View.VISIBLE : View.GONE);
-    }
 
     private void loadBudget() {
         if (FirebaseAuth.getInstance().getUid() == null) return;
@@ -138,7 +93,7 @@ public class PersonalFragment extends Fragment {
         viewModel.getPersonalExpenses().observe(getViewLifecycleOwner(), expenses -> {
             if (expenses != null) {
                 originalExpenses = expenses;
-                applyFilters();
+                adapter.setExpenses(expenses);
                 updateBudgetProgress(expenses);
             }
         });
@@ -149,25 +104,25 @@ public class PersonalFragment extends Fragment {
         for (Expense e : expenses) {
             total += e.getAmount();
         }
-        int progress = (int) ((total / personalBudgetLimit) * 100);
-        binding.pbBudget.setProgress(Math.min(progress, 100));
-        binding.tvBudgetText.setText(String.format("$%.2f / $%.2f", total, personalBudgetLimit));
+
+        // Update the net balance display
+        binding.tvNetBalance.setText(String.format(java.util.Locale.getDefault(), "৳%.2f", total));
+
+        // Update expense display
+        binding.tvExpenses.setText(String.format(java.util.Locale.getDefault(), "-৳%.2f", total));
 
         if (total > personalBudgetLimit) {
-            binding.pbBudget.setProgressTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.error)));
             if (!alertSentThisSession) {
                 sendBudgetAlert(total, personalBudgetLimit);
                 alertSentThisSession = true;
             }
-        } else {
-            binding.pbBudget.setProgressTintList(android.content.res.ColorStateList.valueOf(getResources().getColor(R.color.primary)));
         }
     }
 
     private void sendBudgetAlert(double total, double limit) {
         String uid = FirebaseAuth.getInstance().getUid();
         if (uid == null) return;
-        String message = String.format("Personal budget exceeded! Total: $%.2f, Limit: $%.2f", total, limit);
+        String message = String.format(java.util.Locale.getDefault(), "Personal budget exceeded! Total: $%.2f, Limit: $%.2f", total, limit);
 
         Alert alert = new Alert(UUID.randomUUID().toString(), uid, "Budget Warning", message, "BUDGET");
         FirebaseFirestore.getInstance().collection("alerts").document(alert.getId()).set(alert);
@@ -175,8 +130,8 @@ public class PersonalFragment extends Fragment {
         FirebaseFirestore.getInstance().collection("users").document(uid).get().addOnSuccessListener(snapshot -> {
             if (isAdded()) {
                 User user = snapshot.toObject(User.class);
-                if (user != null && user.getLinkedParentUid() != null) {
-                    String parentMsg = String.format("Your child %s has exceeded their personal budget: $%.2f", user.getUsername(), total);
+                if (user != null && user.getLinkedParentUid() != null && user.getUsername() != null) {
+                    String parentMsg = String.format(java.util.Locale.getDefault(), "Your child %s has exceeded their personal budget: $%.2f", user.getUsername(), total);
                     Alert parentAlert = new Alert(UUID.randomUUID().toString(), user.getLinkedParentUid(), "Child Budget Alert", parentMsg, "BUDGET");
                     FirebaseFirestore.getInstance().collection("alerts").document(parentAlert.getId()).set(parentAlert);
                 }
@@ -193,7 +148,7 @@ public class PersonalFragment extends Fragment {
                 .create();
 
         budgetBinding.btnSaveBudget.setOnClickListener(v -> {
-            String val = budgetBinding.etBudgetAmount.getText().toString();
+            String val = budgetBinding.etBudgetAmount.getText() != null ? budgetBinding.etBudgetAmount.getText().toString() : "";
             if (!val.isEmpty()) {
                 double newLimit = Double.parseDouble(val);
                 saveBudgetToFirestore(newLimit);
@@ -222,9 +177,9 @@ public class PersonalFragment extends Fragment {
                 .create();
 
         dialogBinding.btnSave.setOnClickListener(v -> {
-            String amountStr = dialogBinding.etAmount.getText().toString();
-            String category = dialogBinding.actvCategory.getText().toString();
-            String desc = dialogBinding.etDescription.getText().toString();
+            String amountStr = dialogBinding.etAmount.getText() != null ? dialogBinding.etAmount.getText().toString() : "";
+            String category = dialogBinding.actvCategory.getText() != null ? dialogBinding.actvCategory.getText().toString() : "";
+            String desc = dialogBinding.etDescription.getText() != null ? dialogBinding.etDescription.getText().toString() : "";
 
             if (amountStr.isEmpty() || category.isEmpty()) {
                 Toast.makeText(getContext(), "Fields required", Toast.LENGTH_SHORT).show();

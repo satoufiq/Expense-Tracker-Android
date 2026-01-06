@@ -40,19 +40,18 @@ public class LoginFragment extends Fragment {
     }
 
     private void loginUser() {
-        String input = binding.etEmail.getText().toString().trim();
-        String password = binding.etPassword.getText().toString().trim();
+        String input = binding.etEmail.getText() != null ? binding.etEmail.getText().toString().trim() : "";
+        String password = binding.etPassword.getText() != null ? binding.etPassword.getText().toString().trim() : "";
 
         if (TextUtils.isEmpty(input)) {
-            binding.tilEmail.setError("Email or Username is required");
+            binding.etEmail.setError("Email or Username is required");
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            binding.tilPassword.setError("Password is required");
+            binding.etPassword.setError("Password is required");
             return;
         }
 
-        binding.progressBar.setVisibility(View.VISIBLE);
         binding.btnLogin.setEnabled(false);
 
         if (input.contains("@")) {
@@ -85,12 +84,12 @@ public class LoginFragment extends Fragment {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (isAdded() && binding != null) {
-                        binding.progressBar.setVisibility(View.GONE);
                         binding.btnLogin.setEnabled(true);
                         if (task.isSuccessful()) {
                             Navigation.findNavController(requireView()).navigate(R.id.action_login_to_dashboard);
                         } else {
-                            Toast.makeText(getContext(), "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            String errorMsg = task.getException() != null ? task.getException().getMessage() : "Authentication failed";
+                            Toast.makeText(getContext(), "Authentication failed: " + errorMsg, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -98,7 +97,6 @@ public class LoginFragment extends Fragment {
 
     private void showError(String msg) {
         if (isAdded() && binding != null) {
-            binding.progressBar.setVisibility(View.GONE);
             binding.btnLogin.setEnabled(true);
             Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
         }

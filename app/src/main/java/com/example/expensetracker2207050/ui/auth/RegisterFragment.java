@@ -85,48 +85,52 @@ public class RegisterFragment extends Fragment {
     }
 
     private void registerUser() {
-        String username = binding.etUsername.getText().toString().trim();
-        String email = binding.etEmail.getText().toString().trim();
-        String password = binding.etPassword.getText().toString().trim();
-        String confirmPassword = binding.etConfirmPassword.getText().toString().trim();
+        String username = binding.etUsername.getText() != null ? binding.etUsername.getText().toString().trim() : "";
+        String email = binding.etEmail.getText() != null ? binding.etEmail.getText().toString().trim() : "";
+        String password = binding.etPassword.getText() != null ? binding.etPassword.getText().toString().trim() : "";
+        String confirmPassword = binding.etConfirmPassword.getText() != null ? binding.etConfirmPassword.getText().toString().trim() : "";
         String accountType = binding.rbParent.isChecked() ? "Parent" : "Normal";
 
         if (TextUtils.isEmpty(username)) {
-            binding.tilUsername.setError("Username required");
+            binding.etUsername.setError("Username required");
             return;
         }
         if (TextUtils.isEmpty(email)) {
-            binding.tilEmail.setError("Email required");
+            binding.etEmail.setError("Email required");
             return;
         }
         if (password.length() < 6) {
-            binding.tilPassword.setError("Password too short");
+            binding.etPassword.setError("Password too short");
             return;
         }
         if (!password.equals(confirmPassword)) {
-            binding.tilConfirmPassword.setError("Passwords do not match");
+            binding.etConfirmPassword.setError("Passwords do not match");
             return;
         }
 
-        binding.progressBar.setVisibility(View.VISIBLE);
         binding.btnRegister.setEnabled(false);
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
-                    String uid = authResult.getUser().getUid();
+                    String uid = authResult.getUser() != null ? authResult.getUser().getUid() : null;
+                    if (uid == null) {
+                        if (isAdded() && binding != null) {
+                            binding.btnRegister.setEnabled(true);
+                            Toast.makeText(getContext(), "Registration failed", Toast.LENGTH_SHORT).show();
+                        }
+                        return;
+                    }
                     User user = new User(uid, username, email, accountType);
 
                     // Auth success, now save to Firestore
                     db.collection("users").document(uid).set(user)
                             .addOnSuccessListener(aVoid -> {
                                 if (isAdded() && binding != null) {
-                                    binding.progressBar.setVisibility(View.GONE);
                                     Navigation.findNavController(requireView()).navigate(R.id.action_register_to_dashboard);
                                 }
                             })
                             .addOnFailureListener(e -> {
                                 if (isAdded() && binding != null) {
-                                    binding.progressBar.setVisibility(View.GONE);
                                     binding.btnRegister.setEnabled(true);
                                     Toast.makeText(getContext(), "Firestore Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
@@ -134,7 +138,6 @@ public class RegisterFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     if (isAdded() && binding != null) {
-                        binding.progressBar.setVisibility(View.GONE);
                         binding.btnRegister.setEnabled(true);
                         Toast.makeText(getContext(), "Auth Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
