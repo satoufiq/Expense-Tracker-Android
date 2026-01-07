@@ -35,6 +35,9 @@ public class ModeSelectionFragment extends Fragment {
 
         checkAccountType();
 
+        // Back button
+        binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+
         binding.cardPersonal.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_modeSelection_to_personal));
         binding.cardGroup.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_modeSelection_to_group));
         binding.cardParent.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_modeSelection_to_parent));

@@ -1,7 +1,10 @@
 package com.example.expensetracker2207050.ui.group;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +31,10 @@ import com.example.expensetracker2207050.viewmodel.GroupViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class GroupFragment extends Fragment {
@@ -45,6 +50,9 @@ public class GroupFragment extends Fragment {
     private List<Expense> originalExpenses = new ArrayList<>();
     private String currentSearchQuery = "";
     private String currentCategoryFilter = "All";
+    private Date filterStartDate = null;
+    private Date filterEndDate = null;
+    private final String[] filterCategories = {"All", "Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
 
     @Nullable
     @Override
@@ -61,8 +69,12 @@ public class GroupFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         setupRecyclerView();
+        setupSearchAndFilter();
         observeViewModel();
         loadGroupBudget();
+
+        // Back button
+        binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
 
         binding.btnCreateGroup.setOnClickListener(v -> showCreateGroupDialog());
         binding.btnInvite.setOnClickListener(v -> showInviteDialog());
@@ -91,20 +103,144 @@ public class GroupFragment extends Fragment {
         binding.rvGroupExpenses.setAdapter(adapter);
     }
 
+    private void setupSearchAndFilter() {
+        // Search text watcher
+        binding.etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchQuery = s.toString().toLowerCase().trim();
+                applyFilters();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Category filter dropdown
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_dropdown_item_1line, filterCategories);
+        binding.actvFilterCategory.setAdapter(categoryAdapter);
+        binding.actvFilterCategory.setOnItemClickListener((parent, v, position, id) -> {
+            currentCategoryFilter = filterCategories[position];
+            applyFilters();
+        });
+
+        // Date filter button
+        binding.btnFilterDate.setOnClickListener(v -> showDateFilterDialog());
+    }
+
+    private void showDateFilterDialog() {
+        String[] options = {"All Time", "Today", "This Week", "This Month", "Custom Range"};
+        new AlertDialog.Builder(getContext())
+                .setTitle("Filter by Date")
+                .setItems(options, (dialog, which) -> {
+                    Calendar cal = Calendar.getInstance();
+                    switch (which) {
+                        case 0:
+                            filterStartDate = null;
+                            filterEndDate = null;
+                            binding.btnFilterDate.setText("Date");
+                            break;
+                        case 1:
+                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                            cal.set(Calendar.MINUTE, 0);
+                            cal.set(Calendar.SECOND, 0);
+                            filterStartDate = cal.getTime();
+                            filterEndDate = new Date();
+                            binding.btnFilterDate.setText("Today");
+                            break;
+                        case 2:
+                            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                            cal.set(Calendar.MINUTE, 0);
+                            filterStartDate = cal.getTime();
+                            filterEndDate = new Date();
+                            binding.btnFilterDate.setText("Week");
+                            break;
+                        case 3:
+                            cal.set(Calendar.DAY_OF_MONTH, 1);
+                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                            cal.set(Calendar.MINUTE, 0);
+                            filterStartDate = cal.getTime();
+                            filterEndDate = new Date();
+                            binding.btnFilterDate.setText("Month");
+                            break;
+                        case 4:
+                            showCustomDatePicker();
+                            return;
+                    }
+                    applyFilters();
+                })
+                .show();
+    }
+
+    private void showCustomDatePicker() {
+        Calendar cal = Calendar.getInstance();
+        DatePickerDialog startPicker = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
+            Calendar startCal = Calendar.getInstance();
+            startCal.set(year, month, dayOfMonth, 0, 0, 0);
+            filterStartDate = startCal.getTime();
+
+            DatePickerDialog endPicker = new DatePickerDialog(requireContext(), (v2, y2, m2, d2) -> {
+                Calendar endCal = Calendar.getInstance();
+                endCal.set(y2, m2, d2, 23, 59, 59);
+                filterEndDate = endCal.getTime();
+                binding.btnFilterDate.setText("Custom");
+                applyFilters();
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            endPicker.setTitle("Select End Date");
+            endPicker.show();
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        startPicker.setTitle("Select Start Date");
+        startPicker.show();
+    }
+
+    private void applyFilters() {
+        if (originalExpenses == null) return;
+
+        List<Expense> filtered = new ArrayList<>();
+        for (Expense expense : originalExpenses) {
+            if (!currentSearchQuery.isEmpty()) {
+                boolean matchesSearch = expense.getCategory().toLowerCase().contains(currentSearchQuery) ||
+                        (expense.getDescription() != null && expense.getDescription().toLowerCase().contains(currentSearchQuery));
+                if (!matchesSearch) continue;
+            }
+
+            if (!currentCategoryFilter.equals("All") && !expense.getCategory().equals(currentCategoryFilter)) {
+                continue;
+            }
+
+            if (filterStartDate != null && expense.getDate() != null) {
+                if (expense.getDate().before(filterStartDate)) continue;
+            }
+            if (filterEndDate != null && expense.getDate() != null) {
+                if (expense.getDate().after(filterEndDate)) continue;
+            }
+
+            filtered.add(expense);
+        }
+
+        adapter.setExpenses(filtered);
+    }
 
     private void observeViewModel() {
         viewModel.getCurrentGroup().observe(getViewLifecycleOwner(), group -> {
             if (group != null) {
                 binding.tvGroupName.setText(group.getName());
-                binding.tvMemberCount.setText(String.format(java.util.Locale.getDefault(), "Members: %d", group.getMemberIds().size()));
+                binding.tvMemberCount.setText(String.format(Locale.getDefault(), "Members: %d", group.getMemberIds().size()));
                 binding.llNoGroup.setVisibility(View.GONE);
                 binding.cardGroupInfo.setVisibility(View.VISIBLE);
+                binding.cardSearch.setVisibility(View.VISIBLE);
                 binding.rvGroupExpenses.setVisibility(View.VISIBLE);
                 binding.fabAddGroupExpense.setVisibility(View.VISIBLE);
                 binding.llActions.setVisibility(View.VISIBLE);
             } else {
                 binding.llNoGroup.setVisibility(View.VISIBLE);
                 binding.cardGroupInfo.setVisibility(View.GONE);
+                binding.cardSearch.setVisibility(View.GONE);
                 binding.rvGroupExpenses.setVisibility(View.GONE);
                 binding.fabAddGroupExpense.setVisibility(View.GONE);
                 binding.llActions.setVisibility(View.GONE);
@@ -114,7 +250,7 @@ public class GroupFragment extends Fragment {
         viewModel.getGroupExpenses().observe(getViewLifecycleOwner(), expenses -> {
             if (expenses != null) {
                 originalExpenses = expenses;
-                adapter.setExpenses(expenses);
+                applyFilters();
                 updateGroupBudgetProgress(expenses);
             }
         });
@@ -140,12 +276,12 @@ public class GroupFragment extends Fragment {
         });
     }
 
-    private void updateGroupBudgetProgress(java.util.List<Expense> expenses) {
+    private void updateGroupBudgetProgress(List<Expense> expenses) {
         double total = 0;
         for (Expense e : expenses) total += e.getAmount();
         int progress = (int) ((total / groupBudgetLimit) * 100);
         binding.pbGroupBudget.setProgress(Math.min(progress, 100));
-        binding.tvGroupBudgetText.setText(String.format(java.util.Locale.getDefault(), "$%.2f / $%.2f", total, groupBudgetLimit));
+        binding.tvGroupBudgetText.setText(String.format(Locale.getDefault(), "৳%.2f / ৳%.2f", total, groupBudgetLimit));
 
         if (total > groupBudgetLimit && !alertSentThisSession) {
             sendGroupBudgetAlert(total);
@@ -164,7 +300,7 @@ public class GroupFragment extends Fragment {
     private void sendGroupBudgetAlert(double total) {
         Group group = viewModel.getCurrentGroup().getValue();
         if (group == null) return;
-        String msg = "Group '" + group.getName() + "' budget exceeded! Total: $" + total;
+        String msg = String.format(Locale.getDefault(), "Group '%s' budget exceeded! Total: ৳%.2f", group.getName(), total);
         for (String memberId : group.getMemberIds()) {
             Alert alert = new Alert(UUID.randomUUID().toString(), memberId, "Group Budget Alert", msg, "BUDGET");
             db.collection("alerts").document(alert.getId()).set(alert);

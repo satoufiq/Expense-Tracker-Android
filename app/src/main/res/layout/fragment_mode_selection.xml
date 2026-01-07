@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <!-- Global Background Glow -->
     <View
         android:layout_width="400dp"
         android:layout_height="400dp"
@@ -15,20 +14,33 @@
         android:translationX="150dp"
         android:translationY="-150dp" />
 
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_glass_card"
+        android:src="@drawable/ic_back"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
     <TextView
         android:id="@+id/tvModeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
         android:fontFamily="sans-serif-medium"
         android:letterSpacing="-0.02"
         android:text="Select\nMode"
         android:textColor="@color/white"
-        android:textSize="48sp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
     <TextView
         android:id="@+id/tvModeSubtitle"

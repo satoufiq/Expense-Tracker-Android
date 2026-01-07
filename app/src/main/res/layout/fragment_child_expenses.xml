@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:padding="24dp">
 
-            <!-- Header Icon -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivChildIcon"
                 android:layout_width="48dp"

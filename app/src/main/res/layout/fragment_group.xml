@@ -15,16 +15,29 @@
             android:layout_height="wrap_content"
             android:padding="24dp">
 
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_glass_card"
+                android:src="@drawable/ic_back"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white" />
+
             <TextView
                 android:id="@+id/tvHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:text="Group Mode"
                 android:textColor="@color/white"
-                android:textSize="28sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="@id/btnBack"
+                app:layout_constraintStart_toEndOf="@id/btnBack"
+                app:layout_constraintTop_toTopOf="@id/btnBack" />
 
             <LinearLayout
                 android:id="@+id/llActions"
@@ -32,25 +45,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="@id/btnBack"
+                app:layout_constraintBottom_toBottomOf="@id/btnBack">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAnalytics"
-                    style="@style/Widget.Material3.Button.IconButton.Tonal"
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     app:cornerRadius="12dp"
                     app:icon="@drawable/ic_dashboard_mode"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
                     app:iconTint="@color/primary" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnInvite"
-                    style="@style/Widget.Material3.Button.IconButton.Tonal"
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     app:cornerRadius="12dp"
                     app:icon="@drawable/ic_person"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
                     app:iconTint="@color/secondary" />
             </LinearLayout>
 
@@ -108,6 +126,74 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSearch"
+                style="@style/Widget.ExpenseTracker.PremiumCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/cardGroupInfo">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Search expenses..."
+                        app:boxStrokeColor="@color/primary"
+                        app:startIconDrawable="@drawable/ic_search"
+                        app:startIconTint="@color/text_secondary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Category"
+                            app:boxStrokeColor="@color/primary">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/actvFilterCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:text="All"
+                                android:textColor="@color/white"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnFilterDate"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Date"
+                            app:icon="@drawable/ic_dashboard_mode" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvGroupExpenses"
                 android:layout_width="match_parent"
@@ -116,7 +202,7 @@
                 android:clipToPadding="false"
                 android:paddingBottom="100dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardGroupInfo" />
+                app:layout_constraintTop_toBottomOf="@id/cardSearch" />
 
             <LinearLayout
                 android:id="@+id/llNoGroup"

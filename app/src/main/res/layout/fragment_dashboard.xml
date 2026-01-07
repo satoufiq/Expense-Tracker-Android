@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- Header Icon -->
         <ImageView
             android:id="@+id/ivHeaderIcon"
             android:layout_width="40dp"
@@ -41,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="52dp"
-            android:text="Welcome back, Toufiq"
+            android:text="Welcome "
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +74,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!-- Glow Effect Background -->
                 <View
                     android:layout_width="200dp"
                     android:layout_height="200dp"
@@ -88,7 +86,6 @@
                     android:layout_height="wrap_content"
                     android:padding="24dp">
 
-                    <!-- Icon for Balance -->
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/ivBalanceIcon"
                         android:layout_width="48dp"
@@ -106,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        android:text="Net Balance"
+                        android:text="Total Budget"
                         android:textColor="@color/text_secondary"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="@id/ivBalanceIcon"
@@ -115,12 +112,14 @@
 
                     <TextView
                         android:id="@+id/tvNetBalance"
-                        style="@style/TextAppearance.ExpenseTracker.Balance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="৳1,250.50"
+                        android:fontFamily="monospace"
+                        android:text="৳0.00"
+                        android:textColor="@color/primary"
                         android:textSize="40sp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/ivBalanceIcon" />
 
@@ -140,12 +139,13 @@
                             app:tint="@color/income_green" />
 
                         <TextView
+                            android:id="@+id/tvBudgetStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                        android:text="Healthy tracking status"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp" />
+                            android:text="Set your budget in Personal Mode"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -172,71 +172,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <!-- Glow Effect for Income -->
-                    <View
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="end|bottom"
-                        android:alpha="0.6"
-                        android:background="@drawable/bg_fab_glow" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="18dp">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:background="@color/glow_green"
-                                android:padding="6dp"
-                                android:src="@drawable/ic_income"
-                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                                app:tint="@color/income_green" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Income"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tvIncome"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:fontFamily="monospace"
-                            android:text="+৳2,500.00"
-                            android:textColor="@color/income_green"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.ExpenseTracker.PremiumCard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                app:cardElevation="4dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <!-- Glow Effect for Expenses -->
                     <View
                         android:layout_width="80dp"
                         android:layout_height="80dp"
@@ -269,9 +204,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                android:text="Expenses"
+                                android:text="Total Expenses"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <TextView
@@ -280,8 +215,71 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
                             android:fontFamily="monospace"
-                            android:text="-৳1,249.50"
+                            android:text="৳0.00"
                             android:textColor="@color/expense_red"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.ExpenseTracker.PremiumCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                app:cardElevation="4dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="end|bottom"
+                        android:alpha="0.6"
+                        android:background="@drawable/bg_fab_glow" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="18dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@color/glow_green"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_income"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                                app:tint="@color/income_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="Remaining"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvRemaining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="monospace"
+                            android:text="৳0.00"
+                            android:textColor="@color/income_green"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -320,7 +318,7 @@
                 android:layout_margin="8dp"
                 android:padding="16dp"
                 android:stateListAnimator="@animator/button_squish"
-                android:text="Switch\nMode"
+                android:text="Select\nMode"
                 android:textAllCaps="false"
                 android:textSize="14sp"
                 app:cornerRadius="24dp"

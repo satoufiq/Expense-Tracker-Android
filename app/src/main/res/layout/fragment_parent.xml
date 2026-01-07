@@ -7,40 +7,44 @@
     android:background="@color/bg_dark"
     android:padding="24dp">
 
-    <!-- Header Icon -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_glass_card"
+        android:src="@drawable/ic_back"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivParentIcon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="12dp"
         android:background="@color/glow_green"
-        android:padding="14dp"
+        android:padding="12dp"
         android:src="@drawable/ic_group"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
         app:tint="@color/income_green" />
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="224dp"
-        android:layout_height="149dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:fontFamily="sans-serif-medium"
-        android:letterSpacing="-0.02"
-        android:text="Parent\nSupervision"
+        android:text="Parent Mode"
         android:textColor="@color/white"
-        android:textSize="36sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/ivParentIcon"
-        app:layout_constraintEnd_toStartOf="@id/btnInviteChild"
-        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toEndOf="@id/ivParentIcon"
-        app:layout_constraintTop_toTopOf="@id/ivParentIcon"
-        app:layout_constraintVertical_bias="0.355" />
+        app:layout_constraintTop_toTopOf="@id/ivParentIcon" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnInviteChild"
@@ -54,19 +58,19 @@
         app:cornerRadius="16dp"
         app:icon="@drawable/ic_add"
         app:iconSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/ivParentIcon"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ivParentIcon" />
+        app:layout_constraintTop_toTopOf="@id/btnBack" />
 
     <LinearLayout
         android:id="@+id/llSubtitleHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivParentIcon">
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
 
         <ImageView
             android:layout_width="20dp"
@@ -79,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="👶 Linked Children"
+            android:text=" Linked Children"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />

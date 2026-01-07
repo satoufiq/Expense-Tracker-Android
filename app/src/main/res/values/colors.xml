@@ -3,7 +3,6 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- Royal Dark Purple Theme -->
     <color name="bg_dark">#060510</color>
     <color name="deep_space_bg">#020104</color>
     <color name="card_dark">#0D0B15</color>
@@ -26,7 +25,6 @@
     <color name="error">#EF4444</color>
     <color name="rim_light_start">#4DFFFFFF</color>
 
-    <!-- Transparent helpers -->
     <color name="glass_white">#0DFFFFFF</color>
     <color name="glow_purple">#333A1D66</color>
     <color name="glow_green">#3310B981</color>

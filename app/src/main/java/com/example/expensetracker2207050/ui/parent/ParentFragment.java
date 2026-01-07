@@ -44,6 +44,9 @@ public class ParentFragment extends Fragment implements ChildAdapter.OnChildClic
         setupRecyclerView();
         loadLinkedChildren();
 
+        // Back button
+        binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+
         binding.btnInviteChild.setOnClickListener(v -> showInviteChildDialog());
     }
 

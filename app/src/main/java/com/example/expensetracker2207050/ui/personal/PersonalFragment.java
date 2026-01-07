@@ -1,7 +1,11 @@
 package com.example.expensetracker2207050.ui.personal;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.example.expensetracker2207050.R;
 import com.example.expensetracker2207050.databinding.DialogAddExpenseBinding;
 import com.example.expensetracker2207050.databinding.DialogSetBudgetBinding;
 import com.example.expensetracker2207050.databinding.FragmentPersonalBinding;
@@ -23,8 +30,10 @@ import com.example.expensetracker2207050.viewmodel.PersonalViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class PersonalFragment extends Fragment {
@@ -33,10 +42,15 @@ public class PersonalFragment extends Fragment {
     private PersonalViewModel viewModel;
     private ExpenseAdapter adapter;
     private final String[] categories = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
+    private final String[] filterCategories = {"All", "Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
     private double personalBudgetLimit = 1000.0;
     private boolean alertSentThisSession = false;
 
     private List<Expense> originalExpenses = new ArrayList<>();
+    private String currentSearchQuery = "";
+    private String currentCategoryFilter = "All";
+    private Date filterStartDate = null;
+    private Date filterEndDate = null;
 
     @Nullable
     @Override
@@ -51,12 +65,25 @@ public class PersonalFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(PersonalViewModel.class);
 
         setupRecyclerView();
+        setupSearchAndFilter();
+        loadUserInfo();
         loadBudget();
         observeViewModel();
 
+        // Back button
+        binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+
+        // Add expense FAB
         binding.fabAddExpense.setOnClickListener(v -> showAddExpenseDialog());
 
-        // Long press on cardNetBalance to set budget
+        // Set Budget button
+        binding.btnSetBudget.setOnClickListener(v -> showSetBudgetDialog());
+
+        // Analytics button
+        binding.btnAnalytics.setOnClickListener(v ->
+            Navigation.findNavController(v).navigate(R.id.action_personal_to_analytics));
+
+        // Long press on card to set budget
         binding.cardNetBalance.setOnLongClickListener(v -> {
             showSetBudgetDialog();
             return true;
@@ -69,17 +96,161 @@ public class PersonalFragment extends Fragment {
         binding.rvExpenses.setAdapter(adapter);
     }
 
+    private void setupSearchAndFilter() {
+        // Search text watcher
+        binding.etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchQuery = s.toString().toLowerCase().trim();
+                applyFilters();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Category filter dropdown
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(),
+            android.R.layout.simple_dropdown_item_1line, filterCategories);
+        binding.actvFilterCategory.setAdapter(categoryAdapter);
+        binding.actvFilterCategory.setOnItemClickListener((parent, v, position, id) -> {
+            currentCategoryFilter = filterCategories[position];
+            applyFilters();
+        });
+
+        // Date filter button
+        binding.btnFilterDate.setOnClickListener(v -> showDateFilterDialog());
+    }
+
+    private void showDateFilterDialog() {
+        String[] options = {"All Time", "Today", "This Week", "This Month", "Custom Range"};
+        new AlertDialog.Builder(getContext())
+                .setTitle("Filter by Date")
+                .setItems(options, (dialog, which) -> {
+                    Calendar cal = Calendar.getInstance();
+                    switch (which) {
+                        case 0: // All Time
+                            filterStartDate = null;
+                            filterEndDate = null;
+                            binding.btnFilterDate.setText("Date");
+                            break;
+                        case 1: // Today
+                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                            cal.set(Calendar.MINUTE, 0);
+                            cal.set(Calendar.SECOND, 0);
+                            filterStartDate = cal.getTime();
+                            filterEndDate = new Date();
+                            binding.btnFilterDate.setText("Today");
+                            break;
+                        case 2: // This Week
+                            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                            cal.set(Calendar.MINUTE, 0);
+                            filterStartDate = cal.getTime();
+                            filterEndDate = new Date();
+                            binding.btnFilterDate.setText("Week");
+                            break;
+                        case 3: // This Month
+                            cal.set(Calendar.DAY_OF_MONTH, 1);
+                            cal.set(Calendar.HOUR_OF_DAY, 0);
+                            cal.set(Calendar.MINUTE, 0);
+                            filterStartDate = cal.getTime();
+                            filterEndDate = new Date();
+                            binding.btnFilterDate.setText("Month");
+                            break;
+                        case 4: // Custom Range
+                            showCustomDatePicker();
+                            return;
+                    }
+                    applyFilters();
+                })
+                .show();
+    }
+
+    private void showCustomDatePicker() {
+        Calendar cal = Calendar.getInstance();
+        DatePickerDialog startPicker = new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
+            Calendar startCal = Calendar.getInstance();
+            startCal.set(year, month, dayOfMonth, 0, 0, 0);
+            filterStartDate = startCal.getTime();
+
+            DatePickerDialog endPicker = new DatePickerDialog(requireContext(), (v2, y2, m2, d2) -> {
+                Calendar endCal = Calendar.getInstance();
+                endCal.set(y2, m2, d2, 23, 59, 59);
+                filterEndDate = endCal.getTime();
+                binding.btnFilterDate.setText("Custom");
+                applyFilters();
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            endPicker.setTitle("Select End Date");
+            endPicker.show();
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        startPicker.setTitle("Select Start Date");
+        startPicker.show();
+    }
+
+    private void applyFilters() {
+        if (originalExpenses == null) return;
+
+        List<Expense> filtered = new ArrayList<>();
+        for (Expense expense : originalExpenses) {
+            // Search filter
+            if (!currentSearchQuery.isEmpty()) {
+                boolean matchesSearch = expense.getCategory().toLowerCase().contains(currentSearchQuery) ||
+                        (expense.getDescription() != null && expense.getDescription().toLowerCase().contains(currentSearchQuery));
+                if (!matchesSearch) continue;
+            }
+
+            // Category filter
+            if (!currentCategoryFilter.equals("All") && !expense.getCategory().equals(currentCategoryFilter)) {
+                continue;
+            }
+
+            // Date filter
+            if (filterStartDate != null && expense.getDate() != null) {
+                if (expense.getDate().before(filterStartDate)) continue;
+            }
+            if (filterEndDate != null && expense.getDate() != null) {
+                if (expense.getDate().after(filterEndDate)) continue;
+            }
+
+            filtered.add(expense);
+        }
+
+        adapter.setExpenses(filtered);
+        binding.tvExpenseCount.setText(filtered.size() + " items");
+    }
+
+    private void loadUserInfo() {
+        String uid = FirebaseAuth.getInstance().getUid();
+        if (uid == null) return;
+
+        FirebaseFirestore.getInstance().collection("users").document(uid)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (isAdded() && binding != null && snapshot.exists()) {
+                        User user = snapshot.toObject(User.class);
+                        if (user != null && user.getUsername() != null) {
+                            binding.tvUserGreet.setText("Welcome, " + user.getUsername());
+                        }
+                    }
+                });
+    }
 
     private void loadBudget() {
-        if (FirebaseAuth.getInstance().getUid() == null) return;
         String uid = FirebaseAuth.getInstance().getUid();
+        if (uid == null) return;
+
         FirebaseFirestore.getInstance().collection("budgets")
                 .document(uid + "_personal")
                 .addSnapshotListener((value, error) -> {
-                    if (isAdded() && value != null && value.exists()) {
+                    if (isAdded() && binding != null && value != null && value.exists()) {
                         Budget budget = value.toObject(Budget.class);
                         if (budget != null) {
                             personalBudgetLimit = budget.getAmount();
+                            binding.tvBudgetAmount.setText(String.format(Locale.getDefault(), "৳%.2f", personalBudgetLimit));
                             alertSentThisSession = false;
                             if (originalExpenses != null) {
                                 updateBudgetProgress(originalExpenses);
@@ -93,36 +264,68 @@ public class PersonalFragment extends Fragment {
         viewModel.getPersonalExpenses().observe(getViewLifecycleOwner(), expenses -> {
             if (expenses != null) {
                 originalExpenses = expenses;
-                adapter.setExpenses(expenses);
+                applyFilters();
                 updateBudgetProgress(expenses);
             }
         });
     }
 
-    private void updateBudgetProgress(java.util.List<Expense> expenses) {
+    private void updateBudgetProgress(List<Expense> expenses) {
         double total = 0;
         for (Expense e : expenses) {
             total += e.getAmount();
         }
 
-        // Update the net balance display
-        binding.tvNetBalance.setText(String.format(java.util.Locale.getDefault(), "৳%.2f", total));
+        // Update total expenses
+        binding.tvNetBalance.setText(String.format(Locale.getDefault(), "৳%.2f", total));
 
-        // Update expense display
-        binding.tvExpenses.setText(String.format(java.util.Locale.getDefault(), "-৳%.2f", total));
+        // Update total budget
+        binding.tvBudgetAmount.setText(String.format(Locale.getDefault(), "৳%.2f", personalBudgetLimit));
 
-        if (total > personalBudgetLimit) {
-            if (!alertSentThisSession) {
-                sendBudgetAlert(total, personalBudgetLimit);
-                alertSentThisSession = true;
-            }
+        // Calculate remaining budget
+        double remaining = personalBudgetLimit - total;
+
+        // Update budget progress
+        int progress = (int) ((total / personalBudgetLimit) * 100);
+        binding.pbBudget.setProgress(Math.min(progress, 100));
+
+        // Update remaining display
+        if (remaining >= 0) {
+            binding.tvBudgetStatus.setText(String.format(Locale.getDefault(), "৳%.2f", remaining));
+            binding.tvBudgetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.income_green));
+        } else {
+            binding.tvBudgetStatus.setText(String.format(Locale.getDefault(), "-৳%.2f", Math.abs(remaining)));
+            binding.tvBudgetStatus.setTextColor(ContextCompat.getColor(requireContext(), R.color.expense_red));
+        }
+
+        // Update percentage text
+        binding.tvBudgetPercent.setText(String.format(Locale.getDefault(), "%d%% of budget used", Math.min(progress, 100)));
+
+        // Change progress bar color based on usage
+        if (progress > 100) {
+            binding.pbBudget.setProgressTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.expense_red)));
+            binding.tvBudgetPercent.setTextColor(ContextCompat.getColor(requireContext(), R.color.expense_red));
+        } else if (progress > 80) {
+            binding.pbBudget.setProgressTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.secondary)));
+            binding.tvBudgetPercent.setTextColor(ContextCompat.getColor(requireContext(), R.color.secondary));
+        } else {
+            binding.pbBudget.setProgressTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.income_green)));
+            binding.tvBudgetPercent.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
+        }
+
+        if (total > personalBudgetLimit && !alertSentThisSession) {
+            sendBudgetAlert(total, personalBudgetLimit);
+            alertSentThisSession = true;
         }
     }
 
     private void sendBudgetAlert(double total, double limit) {
         String uid = FirebaseAuth.getInstance().getUid();
         if (uid == null) return;
-        String message = String.format(java.util.Locale.getDefault(), "Personal budget exceeded! Total: $%.2f, Limit: $%.2f", total, limit);
+        String message = String.format(Locale.getDefault(), "Personal budget exceeded! Total: ৳%.2f, Limit: ৳%.2f", total, limit);
 
         Alert alert = new Alert(UUID.randomUUID().toString(), uid, "Budget Warning", message, "BUDGET");
         FirebaseFirestore.getInstance().collection("alerts").document(alert.getId()).set(alert);
@@ -131,7 +334,7 @@ public class PersonalFragment extends Fragment {
             if (isAdded()) {
                 User user = snapshot.toObject(User.class);
                 if (user != null && user.getLinkedParentUid() != null && user.getUsername() != null) {
-                    String parentMsg = String.format(java.util.Locale.getDefault(), "Your child %s has exceeded their personal budget: $%.2f", user.getUsername(), total);
+                    String parentMsg = String.format(Locale.getDefault(), "Your child %s has exceeded their personal budget: ৳%.2f", user.getUsername(), total);
                     Alert parentAlert = new Alert(UUID.randomUUID().toString(), user.getLinkedParentUid(), "Child Budget Alert", parentMsg, "BUDGET");
                     FirebaseFirestore.getInstance().collection("alerts").document(parentAlert.getId()).set(parentAlert);
                 }
@@ -153,8 +356,10 @@ public class PersonalFragment extends Fragment {
                 double newLimit = Double.parseDouble(val);
                 saveBudgetToFirestore(newLimit);
                 dialog.dismiss();
+                Toast.makeText(getContext(), "Budget updated!", Toast.LENGTH_SHORT).show();
             }
         });
+
         dialog.show();
     }
 
@@ -182,7 +387,7 @@ public class PersonalFragment extends Fragment {
             String desc = dialogBinding.etDescription.getText() != null ? dialogBinding.etDescription.getText().toString() : "";
 
             if (amountStr.isEmpty() || category.isEmpty()) {
-                Toast.makeText(getContext(), "Fields required", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Amount and category required", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -190,6 +395,7 @@ public class PersonalFragment extends Fragment {
             Expense expense = new Expense(UUID.randomUUID().toString(), FirebaseAuth.getInstance().getUid(), amount, category, new Date(), desc);
             viewModel.addExpense(expense);
             dialog.dismiss();
+            Toast.makeText(getContext(), "Expense added!", Toast.LENGTH_SHORT).show();
         });
 
         dialog.show();
@@ -201,3 +407,4 @@ public class PersonalFragment extends Fragment {
         binding = null;
     }
 }
+

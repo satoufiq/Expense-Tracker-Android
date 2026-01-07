@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- Glow Effect -->
         <View
             android:layout_width="150dp"
             android:layout_height="150dp"
@@ -29,7 +28,6 @@
             android:orientation="horizontal"
             android:padding="20dp">
 
-            <!-- Alert Icon -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:layout_width="52dp"
                 android:layout_height="52dp"

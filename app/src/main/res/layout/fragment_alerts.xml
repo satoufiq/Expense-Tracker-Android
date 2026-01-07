@@ -6,33 +6,43 @@
     android:background="@color/bg_dark"
     android:paddingHorizontal="24dp">
 
-    <!-- Header Icon -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivAlertsIcon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="60dp"
-        android:background="@color/glow_red"
-        android:padding="14dp"
-        android:src="@drawable/ic_dashboard_alerts"
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_glass_card"
+        android:src="@drawable/ic_back"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivAlertsIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="12dp"
+        android:background="@color/glow_red"
+        android:padding="12dp"
+        android:src="@drawable/ic_dashboard_alerts"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
         app:tint="@color/error" />
 
     <TextView
         android:id="@+id/tvAlertsTitle"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="12dp"
         android:fontFamily="sans-serif-medium"
-        android:letterSpacing="-0.02"
-        android:text="Alerts &amp;\nInvitations"
+        android:text="Alerts and Invitations"
         android:textColor="@color/white"
-        android:textSize="36sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/ivAlertsIcon"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ivAlertsIcon"
         app:layout_constraintTop_toTopOf="@id/ivAlertsIcon" />
 
@@ -40,11 +50,11 @@
         android:id="@+id/rvAlerts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:clipToPadding="false"
         android:paddingBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivAlertsIcon" />
+        app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
     <LinearLayout
         android:id="@+id/tvNoAlerts"
