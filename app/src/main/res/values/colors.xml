@@ -3,16 +3,18 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
-    <color name="bg_dark">#060510</color>
-    <color name="deep_space_bg">#020104</color>
-    <color name="card_dark">#0D0B15</color>
-    <color name="card_highlight">#13101D</color>
-    <color name="glass_surface">#1A0D0B15</color>
+    <color name="bg_dark">#1C1E33</color>
+    <color name="deep_space_bg">#1C1E33</color>
+    <color name="card_dark">#252845</color>
+    <color name="card_highlight">#2E3155</color>
+    <color name="glass_surface">#1A252845</color>
+    <color name="splash_circle">#2A2D4A</color>
+    <color name="splash_circle_inner">#3A3D5A</color>
 
-    <color name="primary">#3A1D66</color>
-    <color name="primary_glow">#4D3A1D66</color>
+    <color name="primary">#4A4D6A</color>
+    <color name="primary_glow">#4D4A4D6A</color>
     <color name="onPrimary">#FFFFFF</color>
-    <color name="secondary">#4B2D7A</color>
+    <color name="secondary">#5A5D7A</color>
 
     <color name="income_green">#10B981</color>
     <color name="income_glow">#2D10B981</color>
@@ -26,7 +28,7 @@
     <color name="rim_light_start">#4DFFFFFF</color>
 
     <color name="glass_white">#0DFFFFFF</color>
-    <color name="glow_purple">#333A1D66</color>
+    <color name="glow_purple">#334A4D6A</color>
     <color name="glow_green">#3310B981</color>
     <color name="glow_red">#33EF4444</color>
 </resources>

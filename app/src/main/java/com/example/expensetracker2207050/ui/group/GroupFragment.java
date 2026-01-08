@@ -80,6 +80,16 @@ public class GroupFragment extends Fragment {
         binding.btnInvite.setOnClickListener(v -> showInviteDialog());
         binding.fabAddGroupExpense.setOnClickListener(v -> showAddExpenseDialog());
 
+        binding.btnViewMembers.setOnClickListener(v -> {
+            Group group = viewModel.getCurrentGroup().getValue();
+            if (group != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("groupId", group.getId());
+                bundle.putString("groupName", group.getName());
+                Navigation.findNavController(v).navigate(R.id.action_group_to_members, bundle);
+            }
+        });
+
         binding.btnAnalytics.setOnClickListener(v -> {
             Group group = viewModel.getCurrentGroup().getValue();
             if (group != null) {

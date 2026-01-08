@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:background="@color/bg_dark">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -49,10 +49,22 @@
                 app:layout_constraintBottom_toBottomOf="@id/btnBack">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnViewMembers"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_group"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconTint="@color/secondary" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAnalytics"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
                     app:cornerRadius="12dp"
                     app:icon="@drawable/ic_dashboard_mode"
                     app:iconGravity="textStart"

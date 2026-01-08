@@ -101,6 +101,40 @@
         <action
             android:id="@+id/action_group_to_analytics"
             app:destination="@id/analyticsFragment" />
+        <action
+            android:id="@+id/action_group_to_members"
+            app:destination="@id/groupMembersFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/groupMembersFragment"
+        android:name="com.example.expensetracker2207050.ui.group.GroupMembersFragment"
+        android:label="Group Members"
+        tools:layout="@layout/fragment_group_members">
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+        <argument
+            android:name="groupName"
+            app:argType="string"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/action_groupMembers_to_compareAnalytics"
+            app:destination="@id/compareAnalyticsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/compareAnalyticsFragment"
+        android:name="com.example.expensetracker2207050.ui.group.CompareAnalyticsFragment"
+        android:label="Compare Analytics"
+        tools:layout="@layout/fragment_compare_analytics">
+        <argument
+            android:name="groupId"
+            app:argType="string" />
+        <argument
+            android:name="groupName"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
 
     <fragment

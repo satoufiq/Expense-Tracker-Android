@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Bag tie/top knot -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,8 C42,8 36,14 36,20 L34,26 C34,30 38,34 46,34 L54,34 C62,34 66,30 66,26 L64,20 C64,14 58,8 50,8 Z"/>
+
+    <!-- Bag body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,34 C18,34 12,44 12,56 L12,76 C12,86 20,94 32,94 L68,94 C80,94 88,86 88,76 L88,56 C88,44 82,34 72,34 L28,34 Z"/>
+
+    <!-- Dollar sign S curve -->
+    <path
+        android:fillColor="#1C1E33"
+        android:pathData="M50,50 C42,50 36,54 36,60 C36,66 42,70 50,70 C58,70 64,74 64,80 C64,86 58,90 50,90"
+        android:strokeWidth="6"
+        android:strokeColor="#1C1E33"
+        android:strokeLineCap="round"/>
+
+    <!-- Dollar sign vertical line -->
+    <path
+        android:strokeColor="#1C1E33"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:pathData="M50,44 L50,96"/>
+</vector>
+
