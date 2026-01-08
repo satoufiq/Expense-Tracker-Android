@@ -98,7 +98,7 @@ public class ParentFragment extends Fragment implements ChildAdapter.OnChildClic
 
         new AlertDialog.Builder(getContext())
                 .setTitle("Options for " + child.getUsername())
-                .setItems(new CharSequence[]{"View Expenses", "Send Suggestion"}, (dialog, which) -> {
+                .setItems(new CharSequence[]{"📊 View Expenses & Analytics", "💡 Send Suggestion"}, (dialog, which) -> {
                     if (which == 0) {
                         Navigation.findNavController(requireView()).navigate(R.id.action_parent_to_childExpenses, bundle);
                     } else {
