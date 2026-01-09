@@ -20,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import java.util.List;
 
-public class AlertsFragment extends Fragment implements InvitationAdapter.OnInviteActionListener, AlertAdapter.OnAlertClickListener {
+public class AlertsFragment extends Fragment implements InvitationAdapter.OnInviteActionListener, AlertAdapter.OnAlertActionListener {
 
     private FragmentAlertsBinding binding;
     private FirebaseFirestore db;
@@ -136,6 +136,22 @@ public class AlertsFragment extends Fragment implements InvitationAdapter.OnInvi
         if (!alert.isSeen()) {
             db.collection("alerts").document(alert.getId()).update("seen", true);
         }
+    }
+
+    @Override
+    public void onMarkAsRead(Alert alert) {
+        db.collection("alerts").document(alert.getId()).update("seen", true)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Marked as read", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @Override
+    public void onDismiss(Alert alert) {
+        db.collection("alerts").document(alert.getId()).delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Alert dismissed", Toast.LENGTH_SHORT).show();
+                });
     }
 
     @Override

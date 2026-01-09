@@ -1,5 +1,6 @@
 package com.example.expensetracker2207050.ui.dashboard;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.expensetracker2207050.models.Expense;
 import com.example.expensetracker2207050.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.Locale;
 
@@ -25,9 +27,13 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ListenerRegistration alertListener;
+    private ListenerRegistration invitationListener;
 
     private double totalBudget = 0.0;
     private double totalExpenses = 0.0;
+    private int unreadAlertCount = 0;
+    private int pendingInvitationCount = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +61,7 @@ public class DashboardFragment extends Fragment {
 
         loadUserInfo();
         loadBudgetAndExpenses();
+        listenForAlerts();
 
         binding.cardModeSelection.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_dashboard_to_modeSelection));
@@ -153,9 +160,68 @@ public class DashboardFragment extends Fragment {
         }
     }
 
+    private void listenForAlerts() {
+        if (mAuth.getCurrentUser() == null) return;
+        String uid = mAuth.getCurrentUser().getUid();
+        String email = mAuth.getCurrentUser().getEmail();
+
+        // Listen for unread alerts
+        alertListener = db.collection("alerts")
+                .whereEqualTo("userId", uid)
+                .whereEqualTo("seen", false)
+                .addSnapshotListener((value, error) -> {
+                    if (isAdded() && binding != null && value != null) {
+                        unreadAlertCount = value.size();
+                        updateAlertButtonState();
+                    }
+                });
+
+        // Listen for pending invitations
+        if (email != null) {
+            invitationListener = db.collection("invitations")
+                    .whereEqualTo("receiverEmail", email)
+                    .whereEqualTo("status", "PENDING")
+                    .addSnapshotListener((value, error) -> {
+                        if (isAdded() && binding != null && value != null) {
+                            pendingInvitationCount = value.size();
+                            updateAlertButtonState();
+                        }
+                    });
+        }
+    }
+
+    private void updateAlertButtonState() {
+        if (binding == null) return;
+
+        int totalNotifications = unreadAlertCount + pendingInvitationCount;
+        if (totalNotifications > 0) {
+            // Show red color for alerts button when there are unread alerts/invitations
+            binding.cardAlerts.setBackgroundTintList(ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.expense_red)));
+            binding.cardAlerts.setIconTint(ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.white)));
+            binding.cardAlerts.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
+            binding.cardAlerts.setText("Alerts\n(" + totalNotifications + " new)");
+        } else {
+            // Reset to default tonal button style
+            binding.cardAlerts.setBackgroundTintList(null);
+            binding.cardAlerts.setIconTint(null);
+            binding.cardAlerts.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
+            binding.cardAlerts.setText("Recent\nAlerts");
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (alertListener != null) {
+            alertListener.remove();
+            alertListener = null;
+        }
+        if (invitationListener != null) {
+            invitationListener.remove();
+            invitationListener = null;
+        }
         binding = null;
     }
 }

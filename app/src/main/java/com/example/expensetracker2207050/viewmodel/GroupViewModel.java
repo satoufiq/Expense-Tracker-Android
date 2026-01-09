@@ -19,35 +19,74 @@ public class GroupViewModel extends ViewModel {
     private final ExpenseRepository expenseRepository = new ExpenseRepository();
 
     private final MutableLiveData<Group> currentGroup = new MutableLiveData<>();
+    private final MutableLiveData<List<Group>> userGroups = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Expense>> groupExpenses = new MutableLiveData<>(new ArrayList<>());
 
-    private ListenerRegistration groupListener;
+    private ListenerRegistration groupsListener;
     private ListenerRegistration expensesListener;
+    private String selectedGroupId = null;
 
     public LiveData<Group> getCurrentGroup() {
-        if (groupListener == null) {
-            loadGroup();
+        if (groupsListener == null) {
+            loadGroups();
         }
         return currentGroup;
+    }
+
+    public LiveData<List<Group>> getUserGroups() {
+        if (groupsListener == null) {
+            loadGroups();
+        }
+        return userGroups;
     }
 
     public LiveData<List<Expense>> getGroupExpenses() {
         return groupExpenses;
     }
 
-    private void loadGroup() {
+    public void selectGroup(String groupId) {
+        selectedGroupId = groupId;
+        List<Group> groups = userGroups.getValue();
+        if (groups != null) {
+            for (Group group : groups) {
+                if (group.getId().equals(groupId)) {
+                    currentGroup.setValue(group);
+                    loadExpenses(groupId);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void loadGroups() {
         if (mAuth.getCurrentUser() == null) return;
         String uid = mAuth.getCurrentUser().getUid();
-        groupListener = db.collection("groups")
+        groupsListener = db.collection("groups")
                 .whereArrayContains("memberIds", uid)
-                .limit(1)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
                     if (value != null && !value.isEmpty()) {
-                        Group group = value.toObjects(Group.class).get(0);
-                        currentGroup.setValue(group);
-                        loadExpenses(group.getId());
+                        List<Group> groups = value.toObjects(Group.class);
+                        userGroups.setValue(groups);
+
+                        // Auto-select first group if no group is selected, or restore selection
+                        if (selectedGroupId != null) {
+                            // Try to find the previously selected group
+                            for (Group group : groups) {
+                                if (group.getId().equals(selectedGroupId)) {
+                                    currentGroup.setValue(group);
+                                    loadExpenses(group.getId());
+                                    return;
+                                }
+                            }
+                        }
+                        // Default to first group
+                        Group firstGroup = groups.get(0);
+                        selectedGroupId = firstGroup.getId();
+                        currentGroup.setValue(firstGroup);
+                        loadExpenses(firstGroup.getId());
                     } else {
+                        userGroups.setValue(new ArrayList<>());
                         currentGroup.setValue(null);
                         groupExpenses.setValue(new ArrayList<>());
                     }
@@ -86,7 +125,7 @@ public class GroupViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (groupListener != null) groupListener.remove();
+        if (groupsListener != null) groupsListener.remove();
         if (expensesListener != null) expensesListener.remove();
     }
 }

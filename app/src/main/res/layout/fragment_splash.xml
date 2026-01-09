@@ -26,7 +26,8 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:contentDescription="App Logo"
-            android:src="@drawable/ic_splash_money_bag" />
+            android:src="@drawable/ic_wallet"
+            app:tint="@color/primary" />
     </FrameLayout>
 
     <TextView

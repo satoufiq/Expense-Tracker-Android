@@ -16,13 +16,15 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.AlertViewHol
 
     private List<Alert> alerts = new ArrayList<>();
     private final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault());
-    private final OnAlertClickListener listener;
+    private final OnAlertActionListener listener;
 
-    public interface OnAlertClickListener {
+    public interface OnAlertActionListener {
         void onAlertClick(Alert alert);
+        void onMarkAsRead(Alert alert);
+        void onDismiss(Alert alert);
     }
 
-    public AlertAdapter(OnAlertClickListener listener) {
+    public AlertAdapter(OnAlertActionListener listener) {
         this.listener = listener;
     }
 
@@ -72,6 +74,17 @@ public class AlertAdapter extends RecyclerView.Adapter<AlertAdapter.AlertViewHol
             } else {
                 binding.tvAlertTitle.setTextColor(binding.getRoot().getContext().getResources().getColor(com.example.expensetracker2207050.R.color.primary));
             }
+
+            // Show/hide action buttons based on seen status
+            if (alert.isSeen()) {
+                binding.btnMarkRead.setVisibility(View.GONE);
+            } else {
+                binding.btnMarkRead.setVisibility(View.VISIBLE);
+                binding.btnMarkRead.setOnClickListener(v -> listener.onMarkAsRead(alert));
+            }
+
+            binding.btnDismiss.setVisibility(View.VISIBLE);
+            binding.btnDismiss.setOnClickListener(v -> listener.onDismiss(alert));
 
             binding.getRoot().setOnClickListener(v -> listener.onAlertClick(alert));
         }

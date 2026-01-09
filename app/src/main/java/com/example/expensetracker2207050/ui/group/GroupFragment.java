@@ -95,6 +95,9 @@ public class GroupFragment extends Fragment {
         });
         binding.fabAddGroupExpense.setOnClickListener(v -> showAddExpenseDialog());
 
+        // Group selector click
+        binding.cardGroupSelector.setOnClickListener(v -> showGroupSelectionDialog());
+
         binding.btnViewMembers.setOnClickListener(v -> {
             Group group = viewModel.getCurrentGroup().getValue();
             if (group != null) {
@@ -336,11 +339,30 @@ public class GroupFragment extends Fragment {
     }
 
     private void observeViewModel() {
+        // Observe all user groups
+        viewModel.getUserGroups().observe(getViewLifecycleOwner(), groups -> {
+            if (groups != null && !groups.isEmpty()) {
+                // User has groups - show group selector
+                binding.cardGroupSelector.setVisibility(View.VISIBLE);
+                binding.llNoGroup.setVisibility(View.GONE);
+            } else {
+                // No groups - show create/join UI
+                binding.cardGroupSelector.setVisibility(View.GONE);
+                binding.llNoGroup.setVisibility(View.VISIBLE);
+                binding.cardGroupInfo.setVisibility(View.GONE);
+                binding.cardSearch.setVisibility(View.GONE);
+                binding.rvGroupExpenses.setVisibility(View.GONE);
+                binding.fabAddGroupExpense.setVisibility(View.GONE);
+                binding.llActions.setVisibility(View.GONE);
+            }
+        });
+
+        // Observe currently selected group
         viewModel.getCurrentGroup().observe(getViewLifecycleOwner(), group -> {
             if (group != null) {
                 binding.tvGroupName.setText(group.getName());
+                binding.tvSelectedGroup.setText(group.getName());
                 binding.tvMemberCount.setText(String.format(Locale.getDefault(), "Members: %d", group.getMemberIds().size()));
-                binding.llNoGroup.setVisibility(View.GONE);
                 binding.cardGroupInfo.setVisibility(View.VISIBLE);
                 binding.cardSearch.setVisibility(View.VISIBLE);
                 binding.rvGroupExpenses.setVisibility(View.VISIBLE);
@@ -351,13 +373,6 @@ public class GroupFragment extends Fragment {
                 boolean isAdmin = group.isAdmin(mAuth.getUid());
                 binding.btnInvite.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
                 binding.btnSetBudget.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
-            } else {
-                binding.llNoGroup.setVisibility(View.VISIBLE);
-                binding.cardGroupInfo.setVisibility(View.GONE);
-                binding.cardSearch.setVisibility(View.GONE);
-                binding.rvGroupExpenses.setVisibility(View.GONE);
-                binding.fabAddGroupExpense.setVisibility(View.GONE);
-                binding.llActions.setVisibility(View.GONE);
             }
         });
 
@@ -433,6 +448,37 @@ public class GroupFragment extends Fragment {
                         db.collection("groups").document(id).set(group);
                     }
                 }).show();
+    }
+
+    private void showGroupSelectionDialog() {
+        List<Group> groups = viewModel.getUserGroups().getValue();
+        if (groups == null || groups.isEmpty()) {
+            Toast.makeText(getContext(), "No groups available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create list of group names with option to create new
+        String[] groupNames = new String[groups.size() + 1];
+        for (int i = 0; i < groups.size(); i++) {
+            groupNames[i] = groups.get(i).getName();
+        }
+        groupNames[groups.size()] = "➕ Create New Group";
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Select Group")
+                .setItems(groupNames, (dialog, which) -> {
+                    if (which == groups.size()) {
+                        // Create new group option
+                        showCreateGroupDialog();
+                    } else {
+                        // Select existing group
+                        Group selectedGroup = groups.get(which);
+                        viewModel.selectGroup(selectedGroup.getId());
+                        Toast.makeText(getContext(), "Switched to " + selectedGroup.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showInviteDialog() {
