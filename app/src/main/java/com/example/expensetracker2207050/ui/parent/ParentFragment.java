@@ -52,6 +52,7 @@ public class ParentFragment extends Fragment implements ChildAdapter.OnChildClic
 
     private void setupRecyclerView() {
         adapter = new ChildAdapter(this);
+        adapter.setOnMessageClickListener(this::showSendMessageDialog);
         binding.rvChildren.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvChildren.setAdapter(adapter);
     }
@@ -98,14 +99,177 @@ public class ParentFragment extends Fragment implements ChildAdapter.OnChildClic
 
         new AlertDialog.Builder(getContext())
                 .setTitle("Options for " + child.getUsername())
-                .setItems(new CharSequence[]{"📊 View Expenses & Analytics", "💡 Send Suggestion"}, (dialog, which) -> {
-                    if (which == 0) {
-                        Navigation.findNavController(requireView()).navigate(R.id.action_parent_to_childExpenses, bundle);
-                    } else {
-                        showSendSuggestionDialog(child);
+                .setItems(new CharSequence[]{
+                    "📊 View Expenses & Analytics",
+                    "💬 Send Message",
+                    "💡 Send Suggestion",
+                    "💰 Set Child's Budget",
+                    "📋 View Message History"
+                }, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            Navigation.findNavController(requireView()).navigate(R.id.action_parent_to_childExpenses, bundle);
+                            break;
+                        case 1:
+                            showSendMessageDialog(child);
+                            break;
+                        case 2:
+                            showSendSuggestionDialog(child);
+                            break;
+                        case 3:
+                            showSetChildBudgetDialog(child);
+                            break;
+                        case 4:
+                            showMessageHistoryDialog(child);
+                            break;
                     }
                 })
                 .show();
+    }
+
+    private void showSendMessageDialog(User child) {
+        android.widget.EditText etMessage = new android.widget.EditText(getContext());
+        etMessage.setHint("Type your message here...");
+        etMessage.setMinLines(3);
+        etMessage.setPadding(40, 30, 40, 30);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Send Message to " + child.getUsername())
+                .setView(etMessage)
+                .setPositiveButton("Send", (d, w) -> {
+                    String message = etMessage.getText().toString().trim();
+                    if (!message.isEmpty()) {
+                        sendMessageToChild(child, "Message from Parent", message, "MESSAGE");
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void sendMessageToChild(User child, String title, String message, String type) {
+        // Create alert for child
+        Alert alert = new Alert(UUID.randomUUID().toString(), child.getUid(), title, message, type);
+        db.collection("alerts").document(alert.getId()).set(alert)
+                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Message sent to " + child.getUsername(), Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to send: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
+        // Persist in messages collection for history
+        java.util.Map<String, Object> msgData = new java.util.HashMap<>();
+        msgData.put("senderId", mAuth.getUid());
+        msgData.put("receiverId", child.getUid());
+        msgData.put("receiverName", child.getUsername());
+        msgData.put("title", title);
+        msgData.put("message", message);
+        msgData.put("type", type);
+        msgData.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+        msgData.put("direction", "PARENT_TO_CHILD");
+
+        db.collection("parent_child_messages").add(msgData);
+    }
+
+    private void showSetChildBudgetDialog(User child) {
+        android.widget.EditText etBudget = new android.widget.EditText(getContext());
+        etBudget.setHint("Budget Amount (৳)");
+        etBudget.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etBudget.setPadding(40, 30, 40, 30);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Set Budget for " + child.getUsername())
+                .setView(etBudget)
+                .setPositiveButton("Set", (d, w) -> {
+                    String amountStr = etBudget.getText().toString().trim();
+                    if (!amountStr.isEmpty()) {
+                        double amount = Double.parseDouble(amountStr);
+                        setChildBudget(child, amount);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void setChildBudget(User child, double amount) {
+        com.example.expensetracker2207050.models.Budget budget =
+            new com.example.expensetracker2207050.models.Budget(
+                child.getUid() + "_personal",
+                child.getUid(),
+                null,
+                amount,
+                "PERSONAL"
+            );
+
+        db.collection("budgets").document(budget.getId()).set(budget)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Budget set for " + child.getUsername(), Toast.LENGTH_SHORT).show();
+                    // Notify child about budget update
+                    String message = String.format(java.util.Locale.getDefault(),
+                        "Your parent has set your budget to ৳%.2f", amount);
+                    Alert alert = new Alert(UUID.randomUUID().toString(), child.getUid(),
+                        "Budget Updated", message, "BUDGET_UPDATE");
+                    db.collection("alerts").document(alert.getId()).set(alert);
+                })
+                .addOnFailureListener(e ->
+                    Toast.makeText(getContext(), "Failed to set budget", Toast.LENGTH_SHORT).show());
+    }
+
+    private void showMessageHistoryDialog(User child) {
+        android.app.ProgressDialog progressDialog = new android.app.ProgressDialog(getContext());
+        progressDialog.setMessage("Loading messages...");
+        progressDialog.show();
+
+        db.collection("parent_child_messages")
+                .whereEqualTo("senderId", mAuth.getUid())
+                .whereEqualTo("receiverId", child.getUid())
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(20)
+                .get()
+                .addOnSuccessListener(sentDocs -> {
+                    db.collection("parent_child_messages")
+                            .whereEqualTo("senderId", child.getUid())
+                            .whereEqualTo("receiverId", mAuth.getUid())
+                            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                            .limit(20)
+                            .get()
+                            .addOnSuccessListener(receivedDocs -> {
+                                progressDialog.dismiss();
+
+                                java.util.List<String> messageList = new java.util.ArrayList<>();
+                                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.getDefault());
+
+                                for (com.google.firebase.firestore.QueryDocumentSnapshot doc : sentDocs) {
+                                    String title = doc.getString("title");
+                                    String msg = doc.getString("message");
+                                    com.google.firebase.Timestamp ts = doc.getTimestamp("timestamp");
+                                    String time = ts != null ? sdf.format(ts.toDate()) : "";
+                                    messageList.add("📤 You → " + child.getUsername() + " (" + time + ")\n" + title + ": " + msg);
+                                }
+
+                                for (com.google.firebase.firestore.QueryDocumentSnapshot doc : receivedDocs) {
+                                    String title = doc.getString("title");
+                                    String msg = doc.getString("message");
+                                    com.google.firebase.Timestamp ts = doc.getTimestamp("timestamp");
+                                    String time = ts != null ? sdf.format(ts.toDate()) : "";
+                                    messageList.add("📥 " + child.getUsername() + " → You (" + time + ")\n" + title + ": " + msg);
+                                }
+
+                                if (messageList.isEmpty()) {
+                                    Toast.makeText(getContext(), "No messages yet", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("Message History with " + child.getUsername())
+                                            .setItems(messageList.toArray(new String[0]), null)
+                                            .setPositiveButton("Close", null)
+                                            .show();
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                progressDialog.dismiss();
+                                Toast.makeText(getContext(), "Failed to load messages", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Failed to load messages", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void showSendSuggestionDialog(User child) {

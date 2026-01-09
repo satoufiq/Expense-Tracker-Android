@@ -13,13 +13,22 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildViewHol
 
     private List<User> children = new ArrayList<>();
     private final OnChildClickListener listener;
+    private OnMessageClickListener messageClickListener;
 
     public interface OnChildClickListener {
         void onChildClick(User child);
     }
 
+    public interface OnMessageClickListener {
+        void onMessageClick(User child);
+    }
+
     public ChildAdapter(OnChildClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnMessageClickListener(OnMessageClickListener listener) {
+        this.messageClickListener = listener;
     }
 
     public void setChildren(List<User> children) {
@@ -56,6 +65,11 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.ChildViewHol
             binding.tvChildName.setText(child.getUsername());
             binding.tvChildEmail.setText(child.getEmail());
             binding.btnViewExpenses.setOnClickListener(v -> listener.onChildClick(child));
+            binding.btnMessage.setOnClickListener(v -> {
+                if (messageClickListener != null) {
+                    messageClickListener.onMessageClick(child);
+                }
+            });
         }
     }
 }

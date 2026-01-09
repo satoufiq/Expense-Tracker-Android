@@ -32,8 +32,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 public class PersonalFragment extends Fragment {
@@ -51,6 +53,10 @@ public class PersonalFragment extends Fragment {
     private String currentCategoryFilter = "All";
     private Date filterStartDate = null;
     private Date filterEndDate = null;
+
+    // Parent-child messaging fields
+    private User currentUser = null;
+    private String linkedParentUid = null;
 
     @Nullable
     @Override
@@ -82,6 +88,9 @@ public class PersonalFragment extends Fragment {
         // Analytics button
         binding.btnAnalytics.setOnClickListener(v ->
             Navigation.findNavController(v).navigate(R.id.action_personal_to_analytics));
+
+        // Send suggestion button (visible only for child accounts)
+        binding.btnSendSuggestion.setOnClickListener(v -> showSendSuggestionToParentDialog());
 
         // Long press on card to set budget
         binding.cardNetBalance.setOnLongClickListener(v -> {
@@ -308,11 +317,86 @@ public class PersonalFragment extends Fragment {
                 .addOnSuccessListener(snapshot -> {
                     if (isAdded() && binding != null && snapshot.exists()) {
                         User user = snapshot.toObject(User.class);
-                        if (user != null && user.getUsername() != null) {
-                            binding.tvUserGreet.setText("Welcome, " + user.getUsername());
+                        if (user != null) {
+                            currentUser = user;
+                            if (user.getUsername() != null) {
+                                binding.tvUserGreet.setText("Welcome, " + user.getUsername());
+                            }
+                            // Check if user has a linked parent
+                            linkedParentUid = user.getLinkedParentUid();
+                            if (linkedParentUid != null && !linkedParentUid.isEmpty()) {
+                                binding.btnSendSuggestion.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 });
+    }
+
+    private void showSendSuggestionToParentDialog() {
+        if (linkedParentUid == null || linkedParentUid.isEmpty()) {
+            Toast.makeText(getContext(), "You are not linked to a parent account", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        android.widget.EditText etMessage = new android.widget.EditText(getContext());
+        etMessage.setHint("Type your message here...");
+        etMessage.setMinLines(3);
+        etMessage.setPadding(40, 30, 40, 30);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Send Message to Parent")
+                .setView(etMessage)
+                .setPositiveButton("Send", (d, w) -> {
+                    String message = etMessage.getText().toString().trim();
+                    if (!message.isEmpty()) {
+                        sendMessageToParent("Message from Child", message, "MESSAGE");
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void sendMessageToParent(String title, String message, String type) {
+        if (linkedParentUid == null) return;
+
+        String childName = (currentUser != null && currentUser.getUsername() != null)
+            ? currentUser.getUsername() : "Your child";
+
+        // Create alert for parent
+        Alert alert = new Alert(
+            UUID.randomUUID().toString(),
+            linkedParentUid,
+            title + " from " + childName,
+            message,
+            type
+        );
+
+        FirebaseFirestore.getInstance().collection("alerts")
+            .document(alert.getId())
+            .set(alert)
+            .addOnSuccessListener(aVoid -> {
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Message sent to parent!", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .addOnFailureListener(e -> {
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Failed to send: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        // Also persist in messages collection for history
+        Map<String, Object> msgData = new HashMap<>();
+        msgData.put("senderId", FirebaseAuth.getInstance().getUid());
+        msgData.put("receiverId", linkedParentUid);
+        msgData.put("senderName", childName);
+        msgData.put("title", title);
+        msgData.put("message", message);
+        msgData.put("type", type);
+        msgData.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+        msgData.put("direction", "CHILD_TO_PARENT");
+
+        FirebaseFirestore.getInstance().collection("parent_child_messages").add(msgData);
     }
 
     private void loadBudget() {
