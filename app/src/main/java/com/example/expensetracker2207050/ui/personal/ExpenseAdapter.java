@@ -20,6 +20,21 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     private List<Expense> expenses = new ArrayList<>();
     private final Map<String, String> userNameCache = new HashMap<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private OnExpenseClickListener clickListener;
+    private String currentUserId;
+
+    public interface OnExpenseClickListener {
+        void onExpenseClick(Expense expense);
+        void onExpenseLongClick(Expense expense);
+    }
+
+    public void setOnExpenseClickListener(OnExpenseClickListener listener) {
+        this.clickListener = listener;
+    }
+
+    public void setCurrentUserId(String userId) {
+        this.currentUserId = userId;
+    }
 
     public void setExpenses(List<Expense> expenses) {
         this.expenses = expenses;
@@ -75,6 +90,22 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             } else {
                 binding.tvContributor.setVisibility(View.GONE);
             }
+
+            // Click listener for showing options
+            itemView.setOnClickListener(v -> {
+                if (clickListener != null) {
+                    clickListener.onExpenseClick(expense);
+                }
+            });
+
+            // Long click listener for edit/delete
+            itemView.setOnLongClickListener(v -> {
+                if (clickListener != null) {
+                    clickListener.onExpenseLongClick(expense);
+                    return true;
+                }
+                return false;
+            });
         }
 
         private void fetchUserName(String uid) {

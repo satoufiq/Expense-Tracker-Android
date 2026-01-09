@@ -75,6 +75,14 @@ public class GroupViewModel extends ViewModel {
         expenseRepository.addExpense(expense);
     }
 
+    public void updateExpense(Expense expense) {
+        expenseRepository.updateExpense(expense);
+    }
+
+    public void deleteExpense(String expenseId) {
+        expenseRepository.deleteExpense(expenseId);
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();

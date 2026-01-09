@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_dark">
 
-    <!-- Splash Icon with circle background -->
+
     <FrameLayout
         android:id="@+id/splashIconContainer"
         android:layout_width="160dp"
@@ -15,14 +15,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Outer glow circle -->
         <View
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_gravity="center"
             android:background="@drawable/bg_splash_circle" />
 
-        <!-- Money bag icon -->
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"

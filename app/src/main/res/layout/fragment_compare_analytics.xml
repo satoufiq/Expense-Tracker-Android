@@ -13,7 +13,7 @@
         android:paddingHorizontal="24dp"
         android:paddingBottom="40dp">
 
-        <!-- Header -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Time Period Toggle -->
+
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggleTime"
             android:layout_width="match_parent"
@@ -111,7 +111,6 @@
                 android:textSize="12sp" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <!-- Member Spending Comparison (Bar Chart) -->
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.ExpenseTracker.PremiumCard"
             android:layout_width="match_parent"
@@ -154,7 +153,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Contribution Pie Chart -->
+
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.ExpenseTracker.PremiumCard"
             android:layout_width="match_parent"
@@ -197,7 +196,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Transaction Count Comparison -->
+
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.ExpenseTracker.PremiumCard"
             android:layout_width="match_parent"
@@ -240,7 +239,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Category Breakdown Per Member -->
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.ExpenseTracker.PremiumCard"
             android:layout_width="match_parent"
@@ -283,7 +281,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Member Ranking Card -->
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.ExpenseTracker.PremiumCard"
             android:layout_width="match_parent"

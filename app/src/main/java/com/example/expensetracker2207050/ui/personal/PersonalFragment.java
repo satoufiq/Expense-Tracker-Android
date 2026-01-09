@@ -92,8 +92,84 @@ public class PersonalFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new ExpenseAdapter();
+        adapter.setCurrentUserId(FirebaseAuth.getInstance().getUid());
+        adapter.setOnExpenseClickListener(new ExpenseAdapter.OnExpenseClickListener() {
+            @Override
+            public void onExpenseClick(Expense expense) {
+                showExpenseOptionsDialog(expense);
+            }
+
+            @Override
+            public void onExpenseLongClick(Expense expense) {
+                showExpenseOptionsDialog(expense);
+            }
+        });
         binding.rvExpenses.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvExpenses.setAdapter(adapter);
+    }
+
+    private void showExpenseOptionsDialog(Expense expense) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Expense Options")
+                .setItems(new CharSequence[]{"✏️ Edit", "🗑️ Delete"}, (dialog, which) -> {
+                    if (which == 0) {
+                        showEditExpenseDialog(expense);
+                    } else {
+                        showDeleteConfirmDialog(expense);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showEditExpenseDialog(Expense expense) {
+        DialogAddExpenseBinding dialogBinding = DialogAddExpenseBinding.inflate(getLayoutInflater());
+
+        // Pre-fill existing values
+        dialogBinding.etAmount.setText(String.valueOf(expense.getAmount()));
+        dialogBinding.actvCategory.setText(expense.getCategory());
+        dialogBinding.etDescription.setText(expense.getDescription());
+
+        ArrayAdapter<String> catAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, categories);
+        dialogBinding.actvCategory.setAdapter(catAdapter);
+        dialogBinding.actvCategory.setOnClickListener(v -> dialogBinding.actvCategory.showDropDown());
+
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Edit Expense")
+                .setView(dialogBinding.getRoot())
+                .create();
+
+        dialogBinding.btnSave.setOnClickListener(v -> {
+            String amountStr = dialogBinding.etAmount.getText() != null ? dialogBinding.etAmount.getText().toString() : "";
+            String category = dialogBinding.actvCategory.getText() != null ? dialogBinding.actvCategory.getText().toString() : "";
+            String desc = dialogBinding.etDescription.getText() != null ? dialogBinding.etDescription.getText().toString() : "";
+
+            if (amountStr.isEmpty() || category.isEmpty()) {
+                Toast.makeText(getContext(), "Amount and category required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            expense.setAmount(Double.parseDouble(amountStr));
+            expense.setCategory(category);
+            expense.setDescription(desc);
+            viewModel.updateExpense(expense);
+            dialog.dismiss();
+            Toast.makeText(getContext(), "Expense updated!", Toast.LENGTH_SHORT).show();
+        });
+
+        dialog.show();
+    }
+
+    private void showDeleteConfirmDialog(Expense expense) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete Expense")
+                .setMessage("Are you sure you want to delete this expense?")
+                .setPositiveButton("Delete", (d, w) -> {
+                    viewModel.deleteExpense(expense.getId());
+                    Toast.makeText(getContext(), "Expense deleted!", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void setupSearchAndFilter() {

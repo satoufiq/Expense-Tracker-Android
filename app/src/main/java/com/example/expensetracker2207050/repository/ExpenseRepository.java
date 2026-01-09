@@ -24,6 +24,14 @@ public class ExpenseRepository {
         return getExpensesCollection().document(id).set(expense);
     }
 
+    public Task<Void> updateExpense(Expense expense) {
+        return getExpensesCollection().document(expense.getId()).set(expense);
+    }
+
+    public Task<Void> deleteExpense(String expenseId) {
+        return getExpensesCollection().document(expenseId).delete();
+    }
+
     public Query getPersonalExpensesQuery() {
         String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
         // Removed orderBy to avoid index requirement; will sort in ViewModel

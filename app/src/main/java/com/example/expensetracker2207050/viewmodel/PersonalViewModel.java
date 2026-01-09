@@ -49,6 +49,14 @@ public class PersonalViewModel extends ViewModel {
         repository.addExpense(expense);
     }
 
+    public void updateExpense(Expense expense) {
+        repository.updateExpense(expense);
+    }
+
+    public void deleteExpense(String expenseId) {
+        repository.deleteExpense(expenseId);
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();

@@ -77,7 +77,22 @@ public class GroupFragment extends Fragment {
         binding.btnBack.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
 
         binding.btnCreateGroup.setOnClickListener(v -> showCreateGroupDialog());
-        binding.btnInvite.setOnClickListener(v -> showInviteDialog());
+        binding.btnInvite.setOnClickListener(v -> {
+            Group group = viewModel.getCurrentGroup().getValue();
+            if (group != null && group.isAdmin(mAuth.getUid())) {
+                showInviteDialog();
+            } else {
+                Toast.makeText(getContext(), "Only group admins can invite members", Toast.LENGTH_SHORT).show();
+            }
+        });
+        binding.btnSetBudget.setOnClickListener(v -> {
+            Group group = viewModel.getCurrentGroup().getValue();
+            if (group != null && group.isAdmin(mAuth.getUid())) {
+                showSetBudgetDialog();
+            } else {
+                Toast.makeText(getContext(), "Only group admins can set budget", Toast.LENGTH_SHORT).show();
+            }
+        });
         binding.fabAddGroupExpense.setOnClickListener(v -> showAddExpenseDialog());
 
         binding.btnViewMembers.setOnClickListener(v -> {
@@ -101,7 +116,7 @@ public class GroupFragment extends Fragment {
 
         binding.cardGroupInfo.setOnClickListener(v -> {
             Group group = viewModel.getCurrentGroup().getValue();
-            if (group != null && group.getAdminId().equals(mAuth.getUid())) {
+            if (group != null && group.isAdmin(mAuth.getUid())) {
                 showSetBudgetDialog();
             }
         });
@@ -109,8 +124,92 @@ public class GroupFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new ExpenseAdapter();
+        adapter.setCurrentUserId(mAuth.getUid());
+        adapter.setOnExpenseClickListener(new ExpenseAdapter.OnExpenseClickListener() {
+            @Override
+            public void onExpenseClick(Expense expense) {
+                showGroupExpenseOptionsDialog(expense);
+            }
+
+            @Override
+            public void onExpenseLongClick(Expense expense) {
+                showGroupExpenseOptionsDialog(expense);
+            }
+        });
         binding.rvGroupExpenses.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvGroupExpenses.setAdapter(adapter);
+    }
+
+    private void showGroupExpenseOptionsDialog(Expense expense) {
+        String currentUid = mAuth.getUid();
+        String contributorId = expense.getContributorId() != null ? expense.getContributorId() : expense.getUserId();
+
+        // Only allow edit/delete if the current user is the one who created this expense
+        if (!currentUid.equals(contributorId)) {
+            Toast.makeText(getContext(), "You can only edit or delete your own expenses", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new AlertDialog.Builder(getContext())
+                .setTitle("Expense Options")
+                .setItems(new CharSequence[]{"✏️ Edit", "🗑️ Delete"}, (dialog, which) -> {
+                    if (which == 0) {
+                        showEditGroupExpenseDialog(expense);
+                    } else {
+                        showDeleteGroupExpenseConfirmDialog(expense);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showEditGroupExpenseDialog(Expense expense) {
+        DialogAddExpenseBinding dBinding = DialogAddExpenseBinding.inflate(getLayoutInflater());
+        String[] cats = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
+
+        // Pre-fill existing values
+        dBinding.etAmount.setText(String.valueOf(expense.getAmount()));
+        dBinding.actvCategory.setText(expense.getCategory());
+        dBinding.etDescription.setText(expense.getDescription());
+
+        dBinding.actvCategory.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, cats));
+        dBinding.actvCategory.setOnClickListener(v -> dBinding.actvCategory.showDropDown());
+
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Edit Group Expense")
+                .setView(dBinding.getRoot())
+                .create();
+
+        dBinding.btnSave.setOnClickListener(v -> {
+            if (dBinding.etAmount.getText() != null && dBinding.actvCategory.getText() != null) {
+                String amt = dBinding.etAmount.getText().toString();
+                String cat = dBinding.actvCategory.getText().toString();
+                if (!amt.isEmpty() && !cat.isEmpty()) {
+                    String desc = dBinding.etDescription.getText() != null ?
+                            dBinding.etDescription.getText().toString() : "";
+                    expense.setAmount(Double.parseDouble(amt));
+                    expense.setCategory(cat);
+                    expense.setDescription(desc);
+                    viewModel.updateExpense(expense);
+                    dialog.dismiss();
+                    Toast.makeText(getContext(), "Expense updated!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showDeleteGroupExpenseConfirmDialog(Expense expense) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete Expense")
+                .setMessage("Are you sure you want to delete this expense?")
+                .setPositiveButton("Delete", (d, w) -> {
+                    viewModel.deleteExpense(expense.getId());
+                    Toast.makeText(getContext(), "Expense deleted!", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void setupSearchAndFilter() {
@@ -247,6 +346,11 @@ public class GroupFragment extends Fragment {
                 binding.rvGroupExpenses.setVisibility(View.VISIBLE);
                 binding.fabAddGroupExpense.setVisibility(View.VISIBLE);
                 binding.llActions.setVisibility(View.VISIBLE);
+
+                // Only show invite and set budget buttons for admin
+                boolean isAdmin = group.isAdmin(mAuth.getUid());
+                binding.btnInvite.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+                binding.btnSetBudget.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
             } else {
                 binding.llNoGroup.setVisibility(View.VISIBLE);
                 binding.cardGroupInfo.setVisibility(View.GONE);

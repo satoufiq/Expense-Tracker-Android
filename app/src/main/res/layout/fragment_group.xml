@@ -49,10 +49,22 @@
                 app:layout_constraintBottom_toBottomOf="@id/btnBack">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSetBudget"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_wallet"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconTint="@color/income_green" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnViewMembers"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
                     app:cornerRadius="12dp"
                     app:icon="@drawable/ic_group"
                     app:iconGravity="textStart"

@@ -16,7 +16,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Header -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Summary Cards Row -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                 android:orientation="horizontal"
                 android:weightSum="3">
 
-                <!-- Total Spent Card -->
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.ExpenseTracker.PremiumCard"
                     android:layout_width="0dp"
@@ -118,7 +118,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Budget Card -->
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.ExpenseTracker.PremiumCard"
                     android:layout_width="0dp"
@@ -159,7 +159,7 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Remaining Card -->
+
                 <com.google.android.material.card.MaterialCardView
                     style="@style/Widget.ExpenseTracker.PremiumCard"
                     android:layout_width="0dp"
@@ -201,7 +201,7 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Top Category Card -->
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTopCategory"
                 style="@style/Widget.ExpenseTracker.PremiumCard"
@@ -263,7 +263,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Pie Chart Card -->
+
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.ExpenseTracker.PremiumCard"
                 android:layout_width="match_parent"
@@ -307,7 +307,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Bar Chart Card -->
+
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.ExpenseTracker.PremiumCard"
                 android:layout_width="match_parent"
@@ -351,7 +351,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Search and Filter Section -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -361,7 +361,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <!-- Search Bar -->
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilSearch"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -388,7 +388,7 @@
                     android:textColorHint="@color/text_secondary" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Filter Chips -->
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -474,7 +474,7 @@
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
-            <!-- Date Filter Row -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -519,7 +519,6 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- Expenses List -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvChildExpenses"
                 android:layout_width="match_parent"
@@ -529,7 +528,6 @@
                 android:nestedScrollingEnabled="false"
                 android:paddingBottom="24dp" />
 
-            <!-- Empty State -->
             <LinearLayout
                 android:id="@+id/llEmptyState"
                 android:layout_width="match_parent"

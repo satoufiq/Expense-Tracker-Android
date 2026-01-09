@@ -15,13 +15,28 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
 
     private List<GroupMember> members = new ArrayList<>();
     private OnMemberClickListener clickListener;
+    private OnMemberLongClickListener longClickListener;
+    private boolean isCurrentUserAdmin = false;
 
     public interface OnMemberClickListener {
         void onMemberClick(GroupMember member);
     }
 
+    public interface OnMemberLongClickListener {
+        void onMemberLongClick(GroupMember member);
+    }
+
     public void setOnMemberClickListener(OnMemberClickListener listener) {
         this.clickListener = listener;
+    }
+
+    public void setOnMemberLongClickListener(OnMemberLongClickListener listener) {
+        this.longClickListener = listener;
+    }
+
+    public void setCurrentUserAdmin(boolean isAdmin) {
+        this.isCurrentUserAdmin = isAdmin;
+        notifyDataSetChanged();
     }
 
     public void setMembers(List<GroupMember> members) {
@@ -67,6 +82,15 @@ public class GroupMemberAdapter extends RecyclerView.Adapter<GroupMemberAdapter.
                 if (clickListener != null) {
                     clickListener.onMemberClick(member);
                 }
+            });
+
+            // Long click for admin to remove members (but not the admin themselves)
+            itemView.setOnLongClickListener(v -> {
+                if (longClickListener != null && isCurrentUserAdmin && !member.isAdmin()) {
+                    longClickListener.onMemberLongClick(member);
+                    return true;
+                }
+                return false;
             });
         }
     }

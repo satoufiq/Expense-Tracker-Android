@@ -1,5 +1,6 @@
 package com.example.expensetracker2207050.ui.group;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.expensetracker2207050.models.Group;
 import com.example.expensetracker2207050.models.GroupMember;
 import com.example.expensetracker2207050.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class GroupMembersFragment extends Fragment {
     private String groupId;
     private String groupName;
     private List<GroupMember> membersList = new ArrayList<>();
+    private boolean isCurrentUserAdmin = false;
+    private Group currentGroup;
 
     @Nullable
     @Override
@@ -64,9 +68,127 @@ public class GroupMembersFragment extends Fragment {
         binding.rvMembers.setAdapter(adapter);
 
         adapter.setOnMemberClickListener(member -> {
-            // Navigate to member's expense details or analytics
-            Toast.makeText(getContext(), "Viewing " + member.getUsername() + "'s profile", Toast.LENGTH_SHORT).show();
+            if (isCurrentUserAdmin) {
+                showMemberOptionsDialog(member);
+            } else {
+                Toast.makeText(getContext(), "Viewing " + member.getUsername() + "'s profile", Toast.LENGTH_SHORT).show();
+            }
         });
+
+        adapter.setOnMemberLongClickListener(member -> {
+            if (isCurrentUserAdmin) {
+                showMemberOptionsDialog(member);
+            }
+        });
+    }
+
+    private void showMemberOptionsDialog(GroupMember member) {
+        String currentUserId = mAuth.getUid();
+
+        // Can't modify yourself
+        if (member.getUid().equals(currentUserId)) {
+            Toast.makeText(getContext(), "You cannot modify your own status", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<String> options = new ArrayList<>();
+        options.add("View Profile");
+
+        if (isCurrentUserAdmin) {
+            if (member.isAdmin()) {
+                options.add("Remove Admin Role");
+            } else {
+                options.add("Make Admin");
+            }
+            options.add("Remove from Group");
+        }
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(member.getUsername())
+                .setItems(options.toArray(new String[0]), (dialog, which) -> {
+                    switch (which) {
+                        case 0: // View Profile
+                            Toast.makeText(getContext(), "Viewing " + member.getUsername() + "'s profile", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 1: // Make Admin / Remove Admin Role
+                            if (member.isAdmin()) {
+                                removeAdminRole(member);
+                            } else {
+                                makeAdmin(member);
+                            }
+                            break;
+                        case 2: // Remove from Group
+                            confirmRemoveMember(member);
+                            break;
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void makeAdmin(GroupMember member) {
+        if (currentGroup == null) return;
+
+        db.collection("groups").document(groupId)
+                .update("adminIds", FieldValue.arrayUnion(member.getUid()))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), member.getUsername() + " is now an admin", Toast.LENGTH_SHORT).show();
+                    loadGroupData(); // Refresh the list
+                })
+                .addOnFailureListener(e ->
+                    Toast.makeText(getContext(), "Failed to add admin: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+    }
+
+    private void removeAdminRole(GroupMember member) {
+        if (currentGroup == null) return;
+
+        // Can't remove the original creator from admin
+        if (member.getUid().equals(currentGroup.getAdminId())) {
+            Toast.makeText(getContext(), "Cannot remove admin role from group creator", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        db.collection("groups").document(groupId)
+                .update("adminIds", FieldValue.arrayRemove(member.getUid()))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), member.getUsername() + " is no longer an admin", Toast.LENGTH_SHORT).show();
+                    loadGroupData(); // Refresh the list
+                })
+                .addOnFailureListener(e ->
+                    Toast.makeText(getContext(), "Failed to remove admin: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+    }
+
+    private void confirmRemoveMember(GroupMember member) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Remove Member")
+                .setMessage("Are you sure you want to remove " + member.getUsername() + " from the group?")
+                .setPositiveButton("Remove", (d, w) -> removeMember(member))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void removeMember(GroupMember member) {
+        if (currentGroup == null) return;
+
+        // Can't remove the original creator
+        if (member.getUid().equals(currentGroup.getAdminId())) {
+            Toast.makeText(getContext(), "Cannot remove the group creator", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Remove from memberIds and adminIds (if applicable)
+        db.collection("groups").document(groupId)
+                .update("memberIds", FieldValue.arrayRemove(member.getUid()),
+                        "adminIds", FieldValue.arrayRemove(member.getUid()))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), member.getUsername() + " has been removed from the group", Toast.LENGTH_SHORT).show();
+                    loadGroupData(); // Refresh the list
+                })
+                .addOnFailureListener(e ->
+                    Toast.makeText(getContext(), "Failed to remove member: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 
     private void setupClickListeners() {
@@ -113,8 +235,14 @@ public class GroupMembersFragment extends Fragment {
     }
 
     private void loadMembersDetails(Group group) {
+        currentGroup = group;
         List<String> memberIds = group.getMemberIds();
-        String adminId = group.getAdminId();
+        List<String> adminIds = group.getAdminIds();
+        String currentUserId = mAuth.getUid();
+
+        // Check if current user is admin
+        isCurrentUserAdmin = group.isAdmin(currentUserId);
+        adapter.setCurrentUserAdmin(isCurrentUserAdmin);
 
         binding.tvTotalMembers.setText(String.valueOf(memberIds.size()));
 
@@ -171,7 +299,8 @@ public class GroupMembersFragment extends Fragment {
 
                                     member.setTotalSpent(memberSpending.getOrDefault(memberId, 0.0));
                                     member.setTransactionCount(memberTransactions.getOrDefault(memberId, 0));
-                                    member.setAdmin(memberId.equals(adminId));
+                                    // Check if member is in adminIds list
+                                    member.setAdmin(group.isAdmin(memberId));
 
                                     membersList.add(member);
                                     loadedCount[0]++;

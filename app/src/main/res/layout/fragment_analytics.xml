@@ -13,7 +13,7 @@
         android:paddingHorizontal="24dp"
         android:paddingBottom="40dp">
 
-        <!-- Header with Back Button -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Time Period Toggle -->
+
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggleTime"
             android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                 android:textSize="13sp" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <!-- Pie Chart Card -->
+
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.ExpenseTracker.PremiumCard"
             android:layout_width="match_parent"
@@ -144,7 +144,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Bar Chart Card -->
+
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.ExpenseTracker.PremiumCard"
             android:layout_width="match_parent"
