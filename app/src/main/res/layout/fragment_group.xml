@@ -191,10 +191,12 @@
                         android:id="@+id/pbGroupBudget"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="6dp"
+                        android:layout_height="8dp"
                         android:layout_marginTop="20dp"
                         android:max="100"
-                        android:progressTint="@color/primary" />
+                        android:progress="0"
+                        android:progressBackgroundTint="@color/glass_surface"
+                        android:progressTint="@color/income_green" />
 
                     <TextView
                         android:id="@+id/tvGroupBudgetText"

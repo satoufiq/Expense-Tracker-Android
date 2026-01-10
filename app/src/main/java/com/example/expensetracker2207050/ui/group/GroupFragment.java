@@ -408,7 +408,11 @@ public class GroupFragment extends Fragment {
     private void updateGroupBudgetProgress(List<Expense> expenses) {
         double total = 0;
         for (Expense e : expenses) total += e.getAmount();
-        int progress = (int) ((total / groupBudgetLimit) * 100);
+
+        int progress = 0;
+        if (groupBudgetLimit > 0) {
+            progress = (int) ((total / groupBudgetLimit) * 100);
+        }
         binding.pbGroupBudget.setProgress(Math.min(progress, 100));
         binding.tvGroupBudgetText.setText(String.format(Locale.getDefault(), "৳%.2f / ৳%.2f", total, groupBudgetLimit));
 
@@ -422,7 +426,7 @@ public class GroupFragment extends Fragment {
                     androidx.core.content.ContextCompat.getColor(requireContext(), R.color.error)));
         } else {
             binding.pbGroupBudget.setProgressTintList(android.content.res.ColorStateList.valueOf(
-                    androidx.core.content.ContextCompat.getColor(requireContext(), R.color.secondary)));
+                    androidx.core.content.ContextCompat.getColor(requireContext(), R.color.income_green)));
         }
     }
 

@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:text="Child Name"
                     android:textColor="@color/white"
-                    android:textSize="19sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -63,8 +63,7 @@
                     android:drawablePadding="6dp"
                     android:text="child@email.com"
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
-                    app:drawableStartCompat="@drawable/ic_email"
+                    android:textSize="10sp"
                     app:drawableTint="@color/text_secondary" />
             </LinearLayout>
 
@@ -87,7 +86,7 @@
                 android:textSize="14sp"
                 app:cornerRadius="16dp"
                 app:icon="@drawable/ic_wallet"
-                app:iconSize="18dp" />
+                app:iconSize="15dp" />
         </LinearLayout>
     </FrameLayout>
 </com.google.android.material.card.MaterialCardView>
