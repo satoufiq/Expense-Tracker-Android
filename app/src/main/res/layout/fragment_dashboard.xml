@@ -46,21 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivHeaderIcon" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivProfile"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@color/card_dark"
-            android:elevation="8dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_user"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-            app:strokeColor="@color/primary"
-            app:strokeWidth="2dp"
-            app:tint="@color/primary" />
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardNetBalance"
             style="@style/Widget.ExpenseTracker.PremiumCard"

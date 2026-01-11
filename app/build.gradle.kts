@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-     alias(libs.plugins.google.services) // Commented: Add google-services.json to app/ and uncomment this to enable Firebase
+     alias(libs.plugins.google.services)
 }
 
 android {

@@ -52,7 +52,7 @@ public class GroupFragment extends Fragment {
     private String currentCategoryFilter = "All";
     private Date filterStartDate = null;
     private Date filterEndDate = null;
-    private final String[] filterCategories = {"All", "Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
+    private final String[] filterCategories = {"All", "Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Travel", "Utilities", "Insurance", "Groceries", "Other"};
 
     @Nullable
     @Override
@@ -168,7 +168,7 @@ public class GroupFragment extends Fragment {
 
     private void showEditGroupExpenseDialog(Expense expense) {
         DialogAddExpenseBinding dBinding = DialogAddExpenseBinding.inflate(getLayoutInflater());
-        String[] cats = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
+        String[] cats = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Travel", "Utilities", "Insurance", "Groceries", "Other"};
 
         // Pre-fill existing values
         dBinding.etAmount.setText(String.valueOf(expense.getAmount()));
@@ -525,7 +525,7 @@ public class GroupFragment extends Fragment {
         Group group = viewModel.getCurrentGroup().getValue();
         if (group == null) return;
         DialogAddExpenseBinding dBinding = DialogAddExpenseBinding.inflate(getLayoutInflater());
-        String[] cats = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
+        String[] cats = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Travel", "Utilities", "Insurance", "Groceries", "Other"};
         dBinding.actvCategory.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, cats));
         dBinding.actvCategory.setOnClickListener(v -> dBinding.actvCategory.showDropDown());
 

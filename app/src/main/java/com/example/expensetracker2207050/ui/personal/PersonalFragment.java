@@ -43,8 +43,8 @@ public class PersonalFragment extends Fragment {
     private FragmentPersonalBinding binding;
     private PersonalViewModel viewModel;
     private ExpenseAdapter adapter;
-    private final String[] categories = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
-    private final String[] filterCategories = {"All", "Food", "Transport", "Shopping", "Bills", "Entertainment", "Other"};
+    private final String[] categories = {"Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Travel", "Utilities", "Insurance", "Groceries", "Other"};
+    private final String[] filterCategories = {"All", "Food", "Transport", "Shopping", "Bills", "Entertainment", "Health", "Education", "Travel", "Utilities", "Insurance", "Groceries", "Other"};
     private double personalBudgetLimit = 1000.0;
     private boolean alertSentThisSession = false;
 
@@ -201,6 +201,7 @@ public class PersonalFragment extends Fragment {
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(),
             android.R.layout.simple_dropdown_item_1line, filterCategories);
         binding.actvFilterCategory.setAdapter(categoryAdapter);
+        binding.actvFilterCategory.setOnClickListener(v -> binding.actvFilterCategory.showDropDown());
         binding.actvFilterCategory.setOnItemClickListener((parent, v, position, id) -> {
             currentCategoryFilter = filterCategories[position];
             applyFilters();
